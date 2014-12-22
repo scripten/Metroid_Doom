@@ -1,0 +1,136 @@
+ACTOR Zoomer : MonsterBase
+{
+  Health 4
+  Height 36
+  Radius 16
+  Speed 8
+  Scale 0.8
+  Obituary "%o was poked by a Zoomer."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    ZOOM A 1 A_Look
+    Loop
+  See:
+    ZOOM AB 10 A_Wander
+    ZOOM A 0 A_CustomMeleeAttack((5))
+    loop
+  Pain:
+    ZOOM A 2 Thing_SetTranslation(0, 7)
+    ZOOM A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    ZOOM B 1 A_Scream
+    ZOOM B 0 A_NoBlocking
+    ZOOM B 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ZOOM B 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("ZoomerIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR Zoomer2 : MonsterBase
+{
+  Health 12
+  Height 36
+  Radius 16
+  Speed 12
+  Scale 0.8
+  Obituary "%o was poked by a Zoomer."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    ZOM2 A 1 A_Look
+    Loop
+  See:
+    ZOM2 AB 10 A_Wander
+    ZOM2 A 0 A_CustomMeleeAttack((10))
+    loop
+  Pain:
+    ZOM2 A 2 Thing_SetTranslation(0, 7)
+    ZOM2 A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    ZOM2 B 1 A_Scream
+    ZOM2 B 0 A_NoBlocking
+    ZOM2 B 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ZOM2 B 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("ZoomerIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR ZoomerIce :IceBase
+{
+  Height 36
+  Radius 16
+  Scale 0.8
+  States
+  {
+  Spawn:
+    ZOOM A 500
+    ZOOM A 1 A_Jump(256, "Death")
+    Loop
+	 Death:
+    ZOOM A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ZOOM A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR Geemer : Zoomer
+{
+  Health 16
+  Speed 10
+  Damage 8
+  Obituary "%o was prodded by a Geemer"
+  DamageFactor "Beam", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    GEEM A 1 A_Look
+    Loop
+  See:
+    GEEM AB 10 A_Chase
+    GEEM A 0 A_CustomMeleeAttack((15))
+    loop
+  Pain:
+    GEEM A 2 Thing_SetTranslation(0, 7)
+    GEEM A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    GEEM B 1 A_Scream
+    GEEM B 0 A_NoBlocking
+    GEEM B 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    GEEM B 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("GeemerIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR GeemerIce : ZoomerIce
+{
+  States
+  {
+  Spawn:
+    GEEM A 500
+    GEEM A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    GEEM A 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    GEEM A 0 A_FreezeDeathChunks
+    Stop
+  }
+}

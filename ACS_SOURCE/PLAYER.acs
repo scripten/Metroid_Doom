@@ -1,0 +1,204 @@
+#library "Player"
+#include "zcommon.acs"
+
+bool alarmplaying = false;
+
+// Gives player more ammo slots for the missile launcher
+script "GiveMissileUp" (void)
+{
+  SetFont("MSSUPGRD");
+  HudMessage(s:"A"; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 1.0);
+  SetAmmoCapacity("MissileAmmo", GetAmmoCapacity("MissileAmmo") + 5);
+  GiveInventory("MissileAmmo", 5);
+}
+
+// Gives player more ammo slots for the super missile launcher
+script "GiveSuperMissileUp" (void)
+{
+  SetFont("SMSUPGRD");
+  HudMessage(s:"A"; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 1.0);
+  SetAmmoCapacity("SuperMissileAmmo", GetAmmoCapacity("SuperMissileAmmo") + 5);
+  GiveInventory("SuperMissileAmmo", 5);
+}
+
+// Gives player an energy tank when one is picked up
+script "GiveEnergyTank" (void)
+{
+  SetFont("NRGUPGRD");
+  HudMessage(s:"A"; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 1.0);
+  SetActorProperty(0, APROP_SpawnHealth, GetActorProperty(0, APROP_SpawnHealth) + 100);
+  SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_SpawnHealth));
+  GiveInventory("ETank", 1);
+}
+
+// Checks health to determine how many energy tanks to display
+script "CheckTanks" enter
+{
+  while(true) {
+    TakeInventory("ETankBar", 14);
+    GiveInventory("ETankBar", GetActorProperty(0, APROP_Health) / 100);
+    Delay(1);
+  }
+}
+
+// Plays an alarm when player's health is under 20
+script "LowHealthAlarm" enter
+{
+  while(true) {
+    if(GetActorProperty(0, APROP_Health) <= 20 && GetActorProperty(0, APROP_Health) >= 1 && alarmplaying == false) {
+      PlaySound(0, "ALARM", CHAN_BODY, 0.2, True, 0);
+	     alarmplaying = true;
+    }
+    else if(GetActorProperty(0, APROP_Health) > 20 || GetActorProperty(0, APROP_Health) == 0) {
+	     StopSound(0, CHAN_BODY);
+	     alarmplaying = false;
+	   }
+	   Delay(20);
+  }
+}
+
+// Does some cleanup and sfx on death
+script "DeathScript" death
+{
+  StopSound(0, CHAN_BODY);
+  StopSound(0, 1);
+  GiveInventory("DeathMarker", 1);
+  if(GetScreenHeight() > 1000)
+    SetFont("CRKGLASS");
+  else
+    SetFont("SCRKGLSS");
+  SetMusic("M_CNTINU");
+  while(True) {
+    HudMessage(s:"A"; HUDMSG_ALPHA, 1, 0, 0.3, 0.5, 0.35, 0.2);
+    Delay(10);
+  }
+}
+
+function str GetImage (int imagenum)
+{
+  if(imagenum == 1)
+    return "MBUPGRD";
+  if(imagenum == 2)
+    return "BSTUPGRD";
+  if(imagenum == 3)
+    return "HJBUPGRD";
+  if(imagenum == 4)
+    return "SJPUPGRD";
+  if(imagenum == 5)
+    return "VSTUPGRD";
+  if(imagenum == 6)
+    return "GSTUPGRD";
+  if(imagenum == 7)
+    return "SCRUPGRD";
+  if(imagenum == 10)
+    return "CBMUPGRD";
+  if(imagenum == 11)
+    return "IBMUPGRD";
+  if(imagenum == 12)
+    return "WBMUPGRD";
+  if(imagenum == 13)
+    return "PBMUPGRD";
+  if(imagenum == 14)
+    return "SVUPGRD";
+  return "NULL";
+}
+
+// Plays the item jingle and shows the item description box
+script "ItemPickup" (int imagenum)
+{
+  str image = GetImage(imagenum);
+  SetFont(image);
+  Thing_Stop(0);
+  SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);
+  ACS_NamedExecute("CheckSuit", 0);
+  HudMessage(s:"A"; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 3);
+  SetMusic("GETITEM");
+  bool loopdisplay = True;
+  for(int i = 0; i < 230; i++) {
+    if(GetPlayerInput(-1, INPUT_BUTTONS) & BT_USE) {
+	     loopdisplay = False;
+	     break;
+	   }
+    Delay(1);
+  }
+  SetMusic("*");
+  while(loopdisplay == True) {
+    if(GetPlayerInput(-1, INPUT_BUTTONS) != 0)
+	     loopdisplay = False;
+    HudMessage(s:"A"; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 0.35);
+    Delay(1);
+  }
+  HudMessage(s:""; HUDMSG_PLAIN, 1, 0, 0.5, 0.5, 0.01);
+  SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+}
+
+// Checks the suit the player currently has and performs upkeep
+script "CheckSuit" (void)
+{
+  if(CheckInventory("MissileLauncher") == 1 || CheckInventory("MissileLauncher_Varia") == 1 || CheckInventory("MissileLauncher_Gravity") == 1) {
+    if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("MissileLauncher", 1);
+      TakeInventory("MissileLauncher_Varia", 1);
+      TakeInventory("MissileLauncher_Gravity", 1);
+      if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("MissileLauncher_Gravity", 1);
+      else
+        GiveInventory("MissileLauncher_Varia", 1);
+    }
+  }
+  if(CheckInventory("PowerBeam") == 1 || CheckInventory("PowerBeam_Varia") == 1 || CheckInventory("PowerBeam_Gravity") == 1) {
+	   if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("PowerBeam", 1);
+	     TakeInventory("PowerBeam_Varia", 1);
+	     TakeInventory("PowerBeam_Gravity", 1);
+	     if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("PowerBeam_Gravity", 1);
+	     else
+	       GiveInventory("PowerBeam_Varia", 1);
+    }
+  }
+  if(CheckInventory("ChargeBeam") == 1 || CheckInventory("ChargeBeam_Varia") == 1 || CheckInventory("ChargeBeam_Gravity") == 1) {
+	   if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("ChargeBeam", 1);
+	     TakeInventory("ChargeBeam_Varia", 1);
+	     TakeInventory("ChargeBeam_Gravity", 1);
+	     if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("ChargeBeam_Gravity", 1);
+	     else
+	       GiveInventory("ChargeBeam_Varia", 1);
+    }
+  }
+  if(CheckInventory("IceBeam") == 1 || CheckInventory("IceBeam_Varia") == 1 || CheckInventory("IceBeam_Gravity") == 1) {
+    if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("IceBeam", 1);
+	     TakeInventory("IceBeam_Varia", 1);
+	     TakeInventory("IceBeam_Gravity", 1);
+	     if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("IceBeam_Gravity", 1);
+	     else
+		      GiveInventory("IceBeam_Varia", 1);
+    }
+  }
+  if(CheckInventory("WaveBeam") == 1 || CheckInventory("WaveBeam_Varia") == 1 || CheckInventory("WaveBeam_Gravity") == 1) {
+    if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("WaveBeam", 1);
+	     TakeInventory("WaveBeam_Varia", 1);
+	     TakeInventory("WaveBeam_Gravity", 1);
+	     if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("WaveBeam_Gravity", 1);
+      else
+        GiveInventory("WaveBeam_Varia", 1);
+    }
+  }
+  if(CheckInventory("PlasmaBeam") == 1 || CheckInventory("PlasmaBeam_Varia") == 1 || CheckInventory("PlasmaBeam_Gravity") == 1) {
+    if(CheckInventory("VariaSuit_Powerup") == 1 || CheckInventory("GravitySuit_Powerup") == 1) {
+      TakeInventory("PlasmaBeam", 1);
+      TakeInventory("PlasmaBeam_Varia", 1);
+      TakeInventory("PlasmaBeam_Gravity", 1);
+      if(CheckInventory("GravitySuit_Powerup") == 1)
+        GiveInventory("PlasmaBeam_Gravity", 1);
+      else
+        GiveInventory("PlasmaBeam_Varia", 1);
+    }
+  }
+}

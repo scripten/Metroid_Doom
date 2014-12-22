@@ -1,0 +1,181 @@
+ACTOR SpacePirate : MonsterBase
+{
+  Health 20
+  Height 55
+  Radius 32
+  Speed 16
+  Scale 0.8
+  Obituary "%o was fried by a Space Pirate."
+  DamageType "NoMonsterDamage"
+  DamageFactor "Beam", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  States
+  {
+  Spawn:
+    YPRT AB 10 A_Look
+    Loop
+  See:
+	   YPRT ABCD 8 A_Chase
+	   Loop
+	 Missile:
+	   YPRT E 0 A_FaceTarget
+	   YPRT E 2 A_Scream
+	   YPRT E 7 A_CustomMissile("PirateShot", 30, 12, -5)
+	   YPRT E 0 A_CustomMissile("PirateShot", 28, -12, 5)
+	   YPRT F 5
+	   Goto See
+  Pain:
+    YPRT G 2
+    Goto See
+  Death:
+    YPRT G 7
+    YPRT H 5 A_Scream 
+    YPRT I 5
+    YPRT I 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    YPRT I 0 A_NoBlocking
+    YPRT I 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("PirateIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR SpacePirateCaptain : MonsterBase
+{
+  Health 80
+  Height 55
+  Radius 32
+  Speed 20
+  Scale 0.8
+  Obituary "%o was fried by a Space Pirate Captain."
+  DamageType "NoMonsterDamage"
+  DamageFactor "Beam", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  States
+  {
+  Spawn:
+    PIRT AB 10 A_Look
+    loop
+  See:
+	  PIRT ABCD 7 A_Chase
+	  loop
+	 Missile:
+	   PIRT E 0 A_FaceTarget
+	   PIRT E 2 A_Scream
+	   PIRT E 7 A_CustomMissile("PirateShot", 30, 12, -5)
+	   PIRT E 0 A_CustomMissile("PirateShot", 28, -12, 5)
+	   PIRT F 5
+	   Goto See
+  Pain:
+    PIRT G 2
+    Goto See
+  Death:
+    PIRT G 7
+    PIRT H 5 A_Scream 
+    PIRT I 5
+    PIRT I 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    PIRT I 0 A_NoBlocking
+    PIRT I 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("PirateIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR SuperSpacePirate : MonsterBase
+{
+  Health 100
+  Height 55
+  Radius 32
+  Speed 22
+  Scale 0.8
+  Obituary "%o was fried by a Space Pirate Commander."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Charge", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  States
+  {
+  Spawn:
+    GPRT AB 10 A_Look
+    loop
+  See:
+    GPRT ABCD 6 A_Chase
+    loop
+	 Missile:
+    GPRT E 0 A_FaceTarget
+    GPRT E 2 A_Scream
+    GPRT EE 4 A_CustomMissile("PirateShot", 30, 12, -5)
+    GPRT EE 0 A_CustomMissile("PirateShot", 30, 12, -5)
+    GPRT E 3 A_CustomMissile("PirateShot", 28, -12, -5)
+    GPRT E 0 A_CustomMissile("PirateShot", 28, -12, -5)
+    GPRT F 5
+    Goto See
+  Pain:
+    GPRT G 2
+    Goto See
+  Death:
+    GPRT G 7
+    GPRT H 5 A_Scream 
+    GPRT I 5
+    GPRT I 0 A_SpawnItemEx("PickupSpawner", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    GPRT I 0 A_NoBlocking
+    GPRT I 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("PirateIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR PirateIce : IceBase
+{
+  Height 55
+  Radius 32
+  Scale 0.8
+  States
+  {
+  Spawn:
+	   GPRT A 500
+	   GPRT A 1 A_Jump(256, "Death")
+	   Loop
+	 Death:
+	   GPRT A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+	   GPRT A 0 A_FreezeDeathChunks
+	   Stop
+  }
+}
+
+ACTOR PirateTrail
+{
+  XScale 0.5
+  YScale 0.1
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    PBST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+
+ACTOR PirateShot : PowerShot
+{
+  SeeSound "PIRTLASR"
+  XScale 0.5
+  YScale 0.1
+  Damage (10)
+  Speed 10
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    PBST ABCD 1 Bright A_SpawnItemEx("PirateTrail", 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    Loop
+  }
+}

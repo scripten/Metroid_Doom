@@ -1,0 +1,116 @@
+ACTOR Viola : MonsterBase
+{
+  +VISIBILITYPULSE
+  +FORCEXYBILLBOARD
+  RenderStyle "Translucent"
+  Alpha 0.7
+  Health 16
+  Height 16
+  Radius 12
+  Speed 10
+  Scale 0.4
+  MeleeRange 128
+  Obituary "%o faced down a Viola."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    VIOL ABCDEFEDCB 5 A_Look
+    Loop
+  See:
+    VIOL ABCDEFEDCB 5 A_Wander
+    VIOL A 0 A_CustomMeleeAttack((15))
+    loop
+  Pain:
+    VIOL A 1 Thing_SetTranslation(0, 7)
+    VIOL A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    VIOL ABCDEF 1 A_Scream
+    VIOL A 0 A_NoBlocking
+    VIOL A 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    VIOL A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("ViolaIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR ViolaIce : IceBase
+{
+  Height 16
+  Radius 16
+  Scale 0.4
+  States
+  {
+  Spawn:
+    VIOL A 500
+    VIOL A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    VIOL A 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    VIOL A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR Multiviola : Viola
+{
+  +JUMPDOWN
+  +SPAWNFLOAT
+  +FLOAT
+  +NOGRAVITY
+  Health 20
+  Height 20
+  Radius 16
+  Speed 14
+  Scale 0.7
+  MeleeRange 128
+  Obituary "%o faced down a Multiviola."
+  DamageFactor "Beam", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    MVIO ABCDEFEDCB 5 A_Look
+    Loop
+  See:
+    MVIO ABCDEFEDCB 5 A_Wander
+    MVIO A 0 A_CustomMeleeAttack((25))
+    loop
+  Pain:
+    MVIO A 1 Thing_SetTranslation(0, 7)
+    MVIO A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    MVIO ABCDEF 1 A_Scream
+    MVIO A 0 A_NoBlocking
+    MVIO A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    MVIO A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("MultiViolaIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR MultiViolaIce : IceBase
+{
+  Height 20
+  Radius 16
+  Scale 0.7
+  States
+  {
+  Spawn:
+    MVIO A 500
+    MVIO A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    MVIO A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    MVIO A 0 A_FreezeDeathChunks
+    Stop
+  }
+}

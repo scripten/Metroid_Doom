@@ -1,0 +1,27 @@
+warp2 texture sbuba0
+
+warp2 texture FWATER1
+warp2 texture FWATER2
+warp2 texture FWATER3
+warp2 texture FWATER4
+
+warp2 texture LAVA1
+warp2 texture LAVA2
+warp2 texture LAVA3
+warp2 texture LAVA4
+
+warp2 texture NUKAGE1
+warp2 texture NUKAGE2
+warp2 texture NUKAGE3
+warp2 texture NUKAGE4
+
+warp2 texture HUDWATER
+warp texture HUDHEAT
+warp2 texture HUDLAVA
+warp2 texture HUDACID
+
+texture WRMWALL1
+    pic WRMWALL1 rand 5 12
+    pic WRMWALL2 rand 5 12
+    pic WRMWALL3 rand 5 12
+    pic WRMWALL4 rand 5 12

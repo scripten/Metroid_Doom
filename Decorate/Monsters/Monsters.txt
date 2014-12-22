@@ -1,0 +1,76 @@
+ACTOR MonsterBase
+{
+  MONSTER
+  +NOBLOOD
+  +LOOKALLAROUND
+  Mass 400
+  Painchance 255
+  DeathSound "MONSDETH"
+  DamageType "NoMonsterDamage"
+}
+
+ACTOR IceBase
+{
+  +SHOOTABLE
+  +SOLID
+  +NOGRAVITY
+  +NOBLOOD
+  Health 1
+  Speed 0
+  Mass 0x7fffffff
+  Translation "Ice"
+  DamageFactor "Ice", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+}
+
+ACTOR Chunk
+{
+  health 15
+  radius 1
+  height 1
+  scale 0.3
+  states
+  {
+  Spawn:
+    CNK1 A 50 A_FadeOut(1)
+    CNK2 A 50 A_FadeOut(1)
+    CNK3 A 50 A_FadeOut(1)
+    CNK4 A 50 A_FadeOut(1)
+  }
+}
+
+ACTOR DamageChunk
+{
+  PROJECTILE
+  -NOGRAVITY
+  radius 3
+  height 3
+  scale 0.6
+  DamageType "NoMonsterDamage"
+  Damage (3)
+  states
+  {
+  Spawn:
+	   CNK1 A 0 NoDelay A_ChangeVelocity(random(-8.0, 8.0), random(-8.0, 8.0), 4.0)
+    CNK1 A 0 A_Jump(25, "Chunk1")
+ 	  CNK1 A 0 A_Jump(25, "Chunk2")
+ 	  CNK1 A 0 A_Jump(25, "Chunk3")
+	   CNK1 A 0 A_Jump(25, "Chunk4")
+	   Goto Chunk1
+ 	Chunk1:
+    CNK1 A 1
+	   Loop
+ 	Chunk2:
+    CNK2 A 1
+	   Loop
+  Chunk3:
+    CNK3 A 1
+	   Loop
+	 Chunk4:
+    CNK4 A 1
+	   Loop
+	 Death:
+	   TNT1 A 0
+	   Stop
+  }
+}

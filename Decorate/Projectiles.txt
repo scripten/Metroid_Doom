@@ -1,0 +1,318 @@
+ACTOR PowerShot : PlasmaBall
+{
+  SeeSound ""
+  DeathSound "BEAMHIT"
+  Renderstyle Translucent
+  Alpha 0.8
+  Scale 0.5
+  Translation "193:197=227:231", "198:207=160:163", "241:241=162:162"
+  Damage (5)
+  Speed 40
+  DamageType "Beam"
+  States
+  {
+  Spawn:
+	   PBST ABCD 1 Bright A_SpawnItemEx("PowerTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR ChargeShot : PlasmaBall
+{
+  SeeSound ""
+  DeathSound "BEAMHIT"
+  Translation "192:207=168:191", "241:241=189:189"
+  Scale 0.5
+  Damage (3)
+  Speed 75
+  DamageType "Beam"
+  States
+  {
+  Spawn:
+   	CBST ABCDABCD 1 Bright A_SpawnItemEx("ChargeTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR ChargeShot1 : ChargeShot
+{
+  Scale 1
+  Damage (8)
+  States
+  {
+  Spawn:
+   	CBST ABCDABCD 1 Bright A_SpawnItemEx("ChargeTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR ChargeShot2 : ChargeShot
+{
+  Scale 1.5
+  Damage (14)
+  Height 8
+  Radius 8
+  States
+  {
+  Spawn:
+	   CBST ABCDABCD 1 Bright A_SpawnItemEx("ChargeTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR ChargeShot3 : ChargeShot
+{
+  Scale 2
+  Height 16
+  Radius 16
+  Damage (20)
+  DamageType "Charge"
+  States
+  {
+  Spawn:
+	   CBST ABCDABCD 1 Bright A_SpawnItemEx("ChargeTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR IceShot : PlasmaBall
+{
+  SeeSound "ISHOT"
+  DamageType "Ice"
+  DeathSound "BEAMHIT"
+  Translation "192:207=80:95", "241:241=96:96"
+  Speed 40
+  Damage (6)
+  Scale 0.5
+  States
+  {
+  Spawn:
+	   ICST A 1 Bright A_SpawnItemEx("IceParticle", random(-2.0, 2.0), random(-2.0, 2.0), random(-2.0, 2.0), 0, 0, 0, 0, 0, 50)
+   	ICST A 0 A_SpawnItemEx("IceTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+	   ICST B 1 Bright A_SpawnItemEx("IceTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+	   ICST C 1 Bright A_SpawnItemEx("IceTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+	   ICST D 1 Bright A_SpawnItemEx("IceTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR IceShot1 : IceShot
+{
+  Scale 1
+  Damage (10)
+  States
+  {
+  Spawn:
+   	ICST A 1 Bright A_SpawnItemEx("IceParticle", random(-4.0, 4.0), random(-4.0, 4.0), random(-4.0, 4.0), 0, 0, 0, 0, 0, 40)
+   	ICST A 0 A_SpawnItemEx("IceTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST B 1 Bright A_SpawnItemEx("IceTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST C 1 Bright A_SpawnItemEx("IceTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+	   ICST D 1 Bright A_SpawnItemEx("IceTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR IceShot2 : IceShot
+{
+  Scale 1.5
+  Damage (16)
+  Height 8
+  Radius 8
+  States
+  {
+  Spawn:
+   	ICST A 1 Bright A_SpawnItemEx("IceParticle", random(-6.0, 6.0), random(-6.0, 6.0), random(-6.0, 6.0), 0, 0, 0, 0, 0, 30)
+   	ICST A 0 A_SpawnItemEx("IceTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST B 1 Bright A_SpawnItemEx("IceTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST C 1 Bright A_SpawnItemEx("IceTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST D 1 Bright A_SpawnItemEx("IceTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR IceShot3 : IceShot
+{
+  Scale 2
+  Height 16
+  Radius 16
+  Damage (22)
+  States
+  {
+  Spawn:
+   	ICST A 1 Bright A_SpawnItemEx("IceParticle", random(-8.0, 8.0), random(-8.0, 8.0), random(-8.0, 8.0), 0, 0, 0, 0, 0, 20)
+   	ICST A 0 A_SpawnItemEx("IceTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST B 1 Bright A_SpawnItemEx("IceTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST C 1 Bright A_SpawnItemEx("IceTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	ICST D 1 Bright A_SpawnItemEx("IceTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+    Loop
+  }
+}
+
+ACTOR WaveShot : PlasmaBall
+{
+  SeeSound ""
+  DeathSound "BEAMHIT"
+  Scale 0.5
+  Speed 120
+  Damage (8)
+  DamageType "Electric"
+  Translation "192:199=250:254", "202:205=254:254", "241:241=43:43"
+  States
+  {
+  Spawn:
+    WVST A 1 Bright
+   	WVST A 0 A_SpawnItemEx("WaveTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+   	WVST BCD 1 A_SpawnItemEx("WaveParticle", random(-1.0, 1.0), random(-1.0, 1.0), random(-1.0, 1.0), 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR WaveShot1 : WaveShot
+{
+  Damage (12)
+  Scale 1
+  States
+  {
+  Spawn:
+    WVST A 1 Bright
+   	WVST A 0 A_SpawnItemEx("WaveTrail1", 0, 0, 0, 0, 0, 0, 0, 100)
+   	WVST BCD 1 A_SpawnItemEx("WaveParticle", random(-1.0, 1.0), random(-1.0, 1.0), random(-1.0, 1.0), 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR WaveShot2 : WaveShot
+{
+  Damage (18)
+  Scale 1.5
+  Height 8
+  Radius 8
+  States
+  {
+  Spawn:
+    WVST A 1 Bright
+   	WVST A 0 A_SpawnItemEx("WaveTrail2", 0, 0, 0, 0, 0, 0, 0, 100)
+   	WVST BCD 1 A_SpawnItemEx("WaveParticle", random(-1.0, 1.0), random(-1.0, 1.0), random(-1.0, 1.0), 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR WaveShot3 : WaveShot
+{
+  Damage (24)
+  Scale 2
+  Height 16
+  Radius 16
+  DamageType "ChargeElectric"
+  States
+  {
+  Spawn:
+    WVST A 1 Bright
+	   WVST A 0 A_SpawnItemEx("WaveTrail3", 0, 0, 0, 0, 0, 0, 0, 100)
+   	WVST BCD 1 A_SpawnItemEx("WaveParticle", random(-1.0, 1.0), random(-1.0, 1.0), random(-1.0, 1.0), 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR PlasmaShot : PlasmaBall
+{
+  SeeSound ""
+  DeathSound "BEAMHIT"
+  Scale 0.3
+  Damage 2
+  DamageType "Plasma"
+  Translation "192:207=112:124", "241:241=121:121"
+  + RIPPER
+  States
+  {
+  Spawn:
+   	PLST AA 1 Bright A_SpawnItemEx("PlasmaParticle", random(-3.0, 3.0), random(-3.0, 3.0), random(-3.0, 3.0), 0, 0, 0, 0, 0, 25)
+	   PLST A 0 Bright A_SpawnItemEx("PlasmaTrail", 0, 0, 0, 0, 0, 0, 0, 0, 100)
+	   PLST BCD 1 Bright A_SpawnItemEx("PlasmaTrail", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR PlasmaShot1 : PlasmaShot
+{
+  Scale 0.6
+  Damage 4
+  States
+  {
+  Spawn:
+   	PLST AA 1 Bright A_SpawnItemEx("PlasmaParticle", random(-3.0, 3.0), random(-3.0, 3.0), random(-3.0, 3.0), 0, 0, 0, 0, 0, 15)
+   	PLST A 0 Bright A_SpawnItemEx("PlasmaTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+	   PLST BCD 1 Bright A_SpawnItemEx("PlasmaTrail1", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR PlasmaShot2 : PlasmaShot
+{
+  Scale 0.9
+  Damage 6
+  Height 8
+  Radius 8
+  States
+  {
+  Spawn:
+	   PLST AA 1 Bright A_SpawnItemEx("PlasmaParticle", random(-4.0, 4.0), random(-4.0, 4.0), random(-4.0, 4.0), 0, 0, 0, 0, 0, 10)
+   	PLST A 0 Bright A_SpawnItemEx("PlasmaTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+   	PLST BCD 1 Bright A_SpawnItemEx("PlasmaTrail2", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR PlasmaShot3 : PlasmaShot
+{
+  Scale 1.2
+  Height 16
+  Radius 16
+  Damage 12
+  DamageType "ChargePlasma"
+  States
+  {
+  Spawn:
+   	PLST AA 1 Bright A_SpawnItemEx("PlasmaParticle", random(-5.0, 5.0), random(-5.0, 5.0), random(-5.0, 5.0), 0, 0, 0, 0, 0, 5)
+   	PLST A 0 Bright A_SpawnItemEx("PlasmaTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+   	PLST BCD 1 Bright A_SpawnItemEx("PlasmaTrail3", 0, 0, 0, 0, 0, 0, 0, 0, 50)
+    Loop
+  }
+}
+
+ACTOR NormalMissile : Rocket
+{
+  SeeSound ""
+  DeathSound "MBOOM"
+  Tag "Missile"
+  Speed 12
+  Damage (20)
+  DamageType "Missile"
+  + DONTHARMCLASS
+  States
+  {
+    Death:
+      MISL B 8 Bright
+      MISL C 6 Bright
+      MISL D 4 Bright
+      Stop
+  }
+}
+
+ACTOR SuperMissile : NormalMissile
+{
+  Tag "Super Missile"
+  Speed 8
+  Damage (60)
+  States
+  {
+    Spawn:
+    		SMSL A 1 Bright
+		    Loop
+    Death:
+      MISL B 8 Bright A_Quake(5, 20, 0, 256, "")
+      MISL C 6 Bright
+      MISL D 4 Bright
+      Stop
+  }
+}

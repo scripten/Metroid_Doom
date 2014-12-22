@@ -1,0 +1,88 @@
+ACTOR Bull : MonsterBase
+{
+  +JUMPDOWN
+  +SPAWNFLOAT
+  +FLOAT
+  +FLOATBOB
+  +NOGRAVITY
+  +FORCEXYBILLBOARD
+  Health 10
+  Height 32
+  Radius 12
+  Speed 10
+  Obituary "%o was smothered by a Bull."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    BLOT ABAC 6 A_Look
+    Loop
+  See:
+    BLOT ABAC 6 A_Wander
+    BLOT AAAAAAAAAA 0 A_SpawnItemEx("BullCloud", random(-10.0, 10.0), random(-10.0, 10.0), random(-5.0, 30.0), 0, 0, 0, 0, 0, 5)
+    loop
+  Pain:
+    BLOT A 1 Thing_SetTranslation(0, 7)
+    BLOT A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    BLOT ABAC 1 A_Scream
+    BLOT AAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("BullCloud", random(-50.0, 50.0), random(-50.0, 50.0), random(-10.0, 40.0), 0, 0, 0, 0, 0, 5)
+    BLOT A 0 A_NoBlocking
+    BLOT A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    BLOT A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("BullIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR BullIce : IceBase
+{
+  Height 16
+  Radius 12
+  States
+  {
+  Spawn:
+    BLOT A 500
+    BLOT A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    BLOT A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    BLOT A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR BullCloud : MonsterBase
+{
+	 Radius 20
+	 Height 30
+	 Health 0x7fffffff
+	 +NOBLOCKMAP +NOGRAVITY +DROPOFF
+	 +NODAMAGETHRUST -SOLID +THRUACTORS
+	 +DONTSPLASH +FOILINVUL +CANBLAST +BLOODLESSIMPACT +BLOCKEDBYSOLIDACTORS
+	 RenderStyle Translucent
+	 Alpha 0.4
+  Scale 0.4
+  DeathSound ""
+  PainChance 0
+  Speed 0
+  Obituary "%o was smothered by a Bull."
+  DamageType "NoMonsterDamage"
+	 States
+	 {
+	 Spawn:
+	  	PSBG AB 2
+    PSBG CCDDEEFFGG 2
+    PSBG G 0 A_CustomMeleeAttack((5))
+	  	PSBG G 0 A_JumpIf(random(0,4) == 4, "Death")
+		  Goto Spawn + 1
+ 	Death:
+  		PSBG FE 7
+  		PSBG DDDDDBBBBB 6 A_FadeTo(0, 0.2, 1)
+	  	Goto Death + 1
+	 }
+}

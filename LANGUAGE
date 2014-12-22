@@ -1,0 +1,19 @@
+[enu default]
+
+QUITMSG = "Press Y to begin evacuation protocol.";
+QUITMSG1 = "Set new coordinates?";
+QUITMSG2 = "Time bomb set! Evacuate immediately!";
+QUITMSG3 = "Find a new bounty to hunt?";
+QUITMSG4 = "Metroid: Other M was a better game after all?";
+QUITMSG5 = "The spirits of the Chozo guide you.";
+QUITMSG6 = "Any objections, Lady?";
+QUITMSG7 = "Time for a strategic retreat?";
+QUITMSG8 = "It's okay. Ridley has plenty of parents to chew on until you're back.";
+QUITMSG9 = "The galaxy is doomed! Escape?";
+QUITMSG10 = "The ancients are displeased.";
+QUITMSG11 = "JUSTIN BAILEY";
+QUITMSG12 = "That was a clever trick, Samus.";
+QUITMSG13 = "Don't leave yet! There's a hyper beam around that next corner.";
+QUITMSG14 = "TUUUUUUUUUUUUUBES...";
+
+OB_DEFAULT = "%o was out-hunted by %p prey.";

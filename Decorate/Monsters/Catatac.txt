@@ -1,0 +1,134 @@
+ACTOR Catatac : MonsterBase
+{
+  Health 15
+  Height 32
+  Radius 16
+  Speed 6
+  Scale 0.8
+  Obituary "%o was pricked by a Catatac."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    CATC AB 4 A_Wander
+    CATC A 0 A_Look
+    Loop
+  See:
+    CATC ABCDEFGHABCDEFGH 10 A_Wander
+    CATC I 10
+    CATC J 7
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 0, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 45, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 90, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 135, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 180, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 225, 0, 10)
+    CATC J 0 A_CustomMissile("WaspShot", 16, 0, 270, 0, 10)
+    CATC J 3 A_CustomMissile("WaspShot", 16, 0, 315, 0, 10)
+    Loop
+  Pain:
+    CATC A 1 Thing_SetTranslation(0, 7)
+    CATC B 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    CATC A 1 A_Scream
+    CATC A 0 A_NoBlocking
+    CATC A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    CATC A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("CatatacIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR Catatac2 : MonsterBase
+{
+  Health 60
+  Height 48
+  Radius 16
+  Speed 10
+  Obituary "%o was pricked by a Red Catatac."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Ice", 0.0
+  DamageFactor "Electric", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    CTC2 AB 4 A_Wander
+    CTC2 A 0 A_Look
+    Loop
+  See:
+    CTC2 ABCDEFGHABCDEFGH 5 A_Chase
+    CTC2 I 10
+    CTC2 J 7
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 0, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 45, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 90, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 135, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 180, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 225, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 270, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 16, 0, 315, 0, 15)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 0, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 45, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 90, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 135, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 180, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 225, 0, 10)
+    CTC2 J 0 A_CustomMissile("WaspShot", 24, 0, 270, 0, 10)
+    CTC2 J 3 A_CustomMissile("WaspShot", 24, 0, 315, 0, 10)
+    Loop
+  Pain:
+    CTC2 A 1 Thing_SetTranslation(0, 7)
+    CTC2 B 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    CTC2 A 1 A_Scream
+    CTC2 A 0 A_NoBlocking
+    CTC2 A 0 A_SpawnItemEx("PickupSpawnerSuperMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    CTC2 A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("Catatac2Ice", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR CatatacIce : IceBase
+{
+  Height 48
+  Radius 16
+  Scale 0.8
+  States
+  {
+  Spawn:
+    CATC A 500
+    CATC A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    CATC A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    CATC A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR Catatac2Ice : IceBase
+{
+  Height 48
+  Radius 16
+  States
+  {
+  Spawn:
+    CTC2 A 500
+    CTC2 A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    CTC2 A 0 A_SpawnItemEx("PickupSpawnerSuperMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    CTC2 A 0 A_FreezeDeathChunks
+    Stop
+  }
+}

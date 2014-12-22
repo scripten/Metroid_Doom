@@ -1,0 +1,93 @@
+ACTOR PickupSpawner : RandomSpawner
+{
+  DropItem "SmallEnergy", 200, 15
+  DropItem "LargeEnergy", 150, 10
+  DropItem "MissileAmmo", 200, 5
+  DropItem "SuperMissileAmmo", 150, 1
+}
+
+ACTOR PickupSpawnerEnergy : RandomSpawner
+{
+  DropItem "SmallEnergy", 200, 15
+  DropItem "LargeEnergy", 150, 10
+}
+
+ACTOR PickupSpawnerMissiles : RandomSpawner
+{
+  DropItem "MissileAmmo", 200, 5
+}
+
+ACTOR PickupSpawnerSuperMissiles : RandomSpawner
+{
+  DropItem "MissileAmmo", 200, 5
+  DropItem "SuperMissileAmmo", 150, 1
+}
+
+ACTOR PickupSpawnerEnergyMissiles : RandomSpawner
+{
+  DropItem "SmallEnergy", 200, 15
+  DropItem "MissileAmmo", 200, 5
+}
+
+ACTOR SmallEnergy : Health
+{
+  RenderStyle "Translucent"
+  Alpha 0.5
+  Inventory.Amount 5
+  Inventory.PickupMessage ""
+  Scale 0.6
+  +INVENTORY.ALWAYSPICKUP
+  +FLOATBOB
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    SMEN ABC 3
+    loop
+  }
+}
+
+ACTOR LargeEnergy : SmallEnergy
+{
+  Inventory.Amount 20
+  States
+  {
+  Spawn:
+    LGEN ABCD 2
+    loop
+  }
+}
+
+ACTOR MissileAmmo : Ammo
+{
+  Inventory.Amount 2
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage ""
+  Inventory.Icon ""
+  +INVENTORY.ALWAYSPICKUP
+  +FLOATBOB
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    MIPK AB 3
+    loop
+  }
+}
+
+ACTOR SuperMissileAmmo : Ammo
+{
+  Inventory.Amount 1
+  Inventory.MaxAmount 0
+  Inventory.PickupMessage ""
+  Inventory.Icon ""
+  +INVENTORY.ALWAYSPICKUP
+  +FLOATBOB
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    SMPK AB 3
+    loop
+  }
+}

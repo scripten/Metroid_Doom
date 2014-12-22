@@ -1,0 +1,342 @@
+#library "Map"
+#include "zcommon.acs"
+
+#define NUM_SHOTS 20
+#define ENEMY_TYPES 28
+
+str class[NUM_SHOTS] = {
+  "IceShot", "IceShot1", "IceShot2", "IceShot3",
+  "WaveShot", "WaveShot1", "WaveShot2", "WaveShot3",
+  "PlasmaShot", "PlasmaShot1", "PlasmaShot2", "PlasmaShot3",
+  "NormalMissile", "SuperMissile",
+  "PowerShot",
+  "ChargeShot", "ChargeShot1", "ChargeShot2", "ChargeShot3", "BallBomb"
+};
+
+/*
+-Enemy List-
+------------
+1 - Zoomer
+2 - Purple Zoomer
+3 - Geemer
+4 - Viola
+5 - MultiViola
+6 - Mellow
+7 - Mella
+8 - Atomic
+9 - Bombu
+10 - Ripper
+11 - Ripper II
+12 - Catatac
+13 - Red Catatac
+14 - Zoro
+15 - Ki Hunter
+16 - Yellow Boyon
+17 - Blue Boyon
+18 - Green Boyon
+19 - Red Boyon
+20 - Space Pirate
+21 - Space Pirate Captain
+22 - Space Pirate Commander
+23 - Bull
+24 - War Wasp
+25 - Choot
+26 - Skree
+27 - Geruto
+28 - Skultera
+*/
+
+/*
+-Tag List-
+------------
+-Thing Tags-
+1-50 - Door Tags (All Missile Doors require a respective MissileDoor thing with the same tag to function)
+51-2500 - Enemy Spawners (Room starts at every multiple of 50)
+2501-2550 - Boss Tags (Reserved for boss encounter-related things)
+2551-2555 - X-Ray Scanner Tags
+2556+ - Free Tags
+
+-Sector Tags-
+1-50 - Door Tags
+51-100 - Liquid Tags
+101+ - Free Tags (3D Floors or sector effects)
+*/
+
+/*
+-X-Ray Scanner Tags-
+------------
+2551 - Bomb
+2552 - Missile
+2553 - Super Missile
+2554 - Speed Booster
+2555 - Screw Attack
+*/
+
+str enemy[ENEMY_TYPES + 1] = {
+  "Null", "Zoomer", "Zoomer2", "Geemer", "Viola", "MultiViola", "Mellow", "Mella", "Atomic", "Bombu",
+  "M_Ripper", "Ripper2", "Catatac", "Catatac2", "Zoro", "KiHunter", "BoyonYellow", "BoyonBlue", 
+  "BoyonGreen", "BoyonRed", "SpacePirate", "SpacePirateCaptain", "SuperSpacePirate", "Bull",
+  "WarWasp", "Choot", "Skree", "Geruto", "Skultera"
+};
+
+// Damages red door
+script "MissileDoor" (int doortag) {
+  if(GetActorProperty(doortag, APROP_Health) != 1) {
+    PlaySound(0, "MSLDOOR", 7, 1.0, False, 0);
+    Thing_Damage(doortag, (1), 0);
+    SetLineTexture(doortag, SIDE_BACK, TEXTURE_TOP, "DEADDOOR");
+    ChangeCeiling(doortag, "DEADDOOR");
+    Delay(5);
+    SetLineTexture(doortag, SIDE_BACK, TEXTURE_TOP, "REDDOOR");
+    ChangeCeiling(doortag, "REDDOOR");
+  }
+}
+
+// Opens green door
+function void SuperMissileDoor (int doortag) {
+  SetActorProperty(doortag, APROP_Health, 1);
+}
+
+function void CheckMissileDoor (int doortag) {
+  if(GetActorProperty(doortag, APROP_Health) <= 1) {
+    SetLineTexture(doortag, SIDE_BACK, TEXTURE_TOP, "BLUEDOOR");
+    ChangeCeiling(doortag, "BLUEDOOR");
+    Door_Open(doortag, 60);
+  }
+}
+
+// Doortype - 1 = Blue (Any) - 2 = Red (Missile) - 3 = Green (Super Missile) - 4 = White (Ice) - 5 = Purple (Wave) - 6 = Yellow (Plasma)
+script "Door" (int tid, int doortype, int doortag) {
+  int class_index = -1;
+
+  for(int i=0; i<NUM_SHOTS; i++)
+    if(CheckActorClass(ActivatorTID(), class[i]))
+      class_index = i;
+
+  // Blue Door
+  if(doortype == 1) {
+    if(class_index > -1)
+      Door_Open(doortag, 60);
+  }
+
+  // Red Door
+  else if(doortype == 2) {
+    // Check if door already opened
+    if(class_index > -1 && class_index != 12 && class_index != 13)
+      CheckMissileDoor(doortag);
+    else {
+      // Hit by normal missile
+      if(class_index == 12)
+        ACS_NamedExecute("MissileDoor", 0, doortag);
+      // Hit by super missile
+      else if(class_index == 13)
+        SuperMissileDoor(doortag);
+      Delay(6);
+      CheckMissileDoor(doortag);
+    }
+  }
+
+  // Green Door
+  else if(doortype == 3) {
+    // Check if door already opened
+    if(class_index > -1 && class_index != 13)
+      CheckMissileDoor(doortag);
+    // Hit by super missile
+    else if(class_index == 13) {
+      SuperMissileDoor(doortag);
+      CheckMissileDoor(doortag);
+    }
+  }
+  
+  else if(doortype == 4) {
+    if(class_index <= 3 && class_index > -1)
+      Door_Open(doortag, 60);
+  }
+
+  else if(doortype == 5) {
+    if(class_index <= 7 && class_index > 3)
+      Door_Open(doortag, 60);
+  }
+  
+  else if(doortype == 6) {
+    if(class_index <= 11 && class_index > 7)
+      Door_Open(doortag, 60);
+  }
+}
+
+// Initializes the enemies on the map
+script "Init_Map" enter {
+  CreateTranslation(7, 0:255=%[0.38,0.17,0.13]:[1.89,1.71,1.65]);
+  CreateTranslation(8, 238:238=[66,13,0]:[207,0,0], 14:14=[80,28,3]:[255,255,255], 139:139=[125,38,23]:[255,255,255], 75:75=[119,30,17]:[255,255,255], 146:146=[157,57,47]:[255,255,255], 95:95=[206,98,70]:[210,124,115], 83:83=[236,157,149]:[255,255,255], 128:128=[214,109,84]:[255,255,255], 131:131=[210,130,130]:[255,255,255]);
+  CreateTranslation(9, 83:83=34:34, 128:128=36:36, 131:131=38:38, 95:95=39:39, 146:146=41:41, 139:139=42:42, 75:75=43:43, 14:14=45:45, 238:238=46:46);
+  for(int i=1; i<=50; i++) {
+    ACS_NamedExecute("Setup_Room", 0, i);
+    delay(1);
+  }
+}
+
+// Removes enemies in room and puts them back into start positions
+script "Setup_Room" (int room) {
+  Thing_Remove(room * 50);
+  for(int i=1; i<=ENEMY_TYPES; i++)
+    SpawnSpotFacing(enemy[i], (room * 50) + i, room * 50);
+}
+
+// Causes ice to form on water - Use ActorHitsFakeFloor
+script "Freeze_Water" (int tag, int water_height) {
+  int class_index = -1;
+  for(int i=0; i<NUM_SHOTS; i++) {
+    if(CheckActorClass(ActivatorTID(), class[i])) {
+      class_index = i;
+    }
+  }
+  if(class_index <= 3 && class_index > -1) {
+    Ceiling_RaiseByValue(tag, 300, water_height + 1);
+    Delay(280);
+    Ceiling_LowerByValue(tag, 300, water_height + 1);
+  }
+}
+
+// Checks for gravity suit and sets up water areas
+script "Water" (int tag, int entering) {
+  bool player_missing_suit = !(CheckInventory("GravitySuit_Powerup"));
+  if(player_missing_suit) {
+    if(entering) {
+      Sector_SetGravity(tag, 1, 50);
+      Sector_SetFriction(tag, 75);
+    } else {
+      Sector_SetGravity(tag, 1, 0);
+      Sector_SetFriction(tag, 100);
+    }
+  } else {
+    Sector_SetGravity(tag, 1, 0);
+    Sector_SetFriction(tag, 100);
+  }
+  if(entering)
+    GiveInventory("WaterMarker", 1);
+  else
+    TakeInventory("WaterMarker", 1);
+}
+
+// Checks for gravity suit and sets up lava areas
+script "Lava" (int tag, int entering) {
+  bool player_missing_suit = !(CheckInventory("GravitySuit_Powerup"));
+  if(player_missing_suit) {
+    if(entering) {
+      Sector_SetGravity(tag, 1, 50);
+      Sector_SetFriction(tag, 75);
+      ACS_NamedExecute("LavaHurt", 0);
+    } else {
+      Sector_SetGravity(tag, 1, 0);
+      Sector_SetFriction(tag, 100);
+      ACS_NamedTerminate("LavaHurt", 0);
+    }
+  } else {
+    Sector_SetGravity(tag, 1, 0);
+    Sector_SetFriction(tag, 100);
+  }
+  if(entering)
+    GiveInventory("LavaMarker", 1);
+  else
+    TakeInventory("LavaMarker", 1);
+    StopSound(0, 7);
+}
+
+script "LavaHurt" (void) {
+  if(!CheckInventory("GravitySuit_Powerup"))
+    PlaySound(0, "LAVASIZZ", 7, 1.0, True, 0);
+  else
+    StopSound(0, 7);
+  while(!CheckInventory("GravitySuit_Powerup")) {
+    SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_Health) - 1);
+    Delay(10);
+  }
+}
+
+// Checks for gravity suit and sets up acid areas
+script "Acid" (int tag, int entering) {
+  if(entering) {
+    Sector_SetGravity(tag, 1, 50);
+    Sector_SetFriction(tag, 75);
+    ACS_NamedExecute("AcidHurt", 0);
+  } else {
+    Sector_SetGravity(tag, 1, 0);
+    Sector_SetFriction(tag, 100);
+    ACS_NamedTerminate("AcidHurt", 0);
+  }
+  if(CheckInventory("GravitySuit_Powerup")) {
+    Sector_SetGravity(tag, 1, 0);
+    Sector_SetFriction(tag, 100);
+  }
+  if(entering)
+    GiveInventory("AcidMarker", 1);
+  else {
+    TakeInventory("AcidMarker", 1);
+    StopSound(0, 7);
+  }
+}
+
+script "AcidHurt" (void) {
+  PlaySound(0, "HEATSIZZ", 7, 1.0, True, 0);
+  while(True) {
+    SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_Health) - 1);
+    Delay(7);
+  }
+}
+
+// Hurts player w/o varia suit and plays sizzling sound to indicate damage reason
+script "Heat" (void) {
+  GiveInventory("HeatMarker", 1);
+  if(!CheckInventory("VariaSuit_Powerup") && !CheckInventory("GravitySuit_Powerup"))
+    PlaySound(0, "HEATSIZZ", 7, 1.0, True, 0);
+  else
+    StopSound(0, 7);
+  while(!CheckInventory("VariaSuit_Powerup") && !CheckInventory("GravitySuit_Powerup")) {
+    SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_Health) - 1);
+    Delay(10);
+  }
+}
+
+script "HeatStop" (void) {
+  TakeInventory("HeatMarker", 1);
+  ACS_NamedTerminate("Heat", 0);
+  StopSound(0, 7);
+}
+
+script "FillHealth" (void) {
+  PlaySound(0, "FILLUP", 7, 1.0, False, 0);
+  SetActorProperty(0, APROP_Health, GetActorProperty(0, APROP_SpawnHealth));
+}
+
+script "FillMissiles" (void) {
+  PlaySound(0, "FILLUP", 7, 1.0, False, 0);
+  GiveInventory("MissileAmmo", 999);
+  GiveInventory("SuperMissileAmmo", 999);
+}
+
+script "FillHealthAndMissiles" (void) {
+  ACS_NamedExecute("FillHealth", 0);
+  ACS_NamedExecute("FillMissiles", 0);
+}
+
+function str GetTrack (int track)
+{
+  if(track == 0)  // Default
+    return "*";
+  if(track == 1)  // Item Room
+    return "M_ITEMRM";
+  if(track == 2)  // Hostile Approaching
+    return "M_HOSTIL";
+  if(track == 3)  // With Sprinkles
+    return "M_SPRNKL";
+  if(track == 4)  // Weed-B-Gone
+    return "M_WBGONE";
+  if(track == 5)  // Zen Blossom
+    return "M_BLOSSM";
+  return "NULL";
+}
+
+script "ChangeMusic" (int track) {
+  str song = GetTrack(track);
+  SetMusic(song);
+}

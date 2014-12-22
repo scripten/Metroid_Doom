@@ -1,0 +1,410 @@
+ACTOR Bomb : Weapon
+{
+  inventory.pickupmessage "Bomb"
+  + WEAPON.AMMO_OPTIONAL
+  Tag "Bomb"
+  States
+  {
+  Deselect:
+    TNT1 A 1 A_Lower
+    loop
+  Select:
+    TNT1 A 1 A_Raise
+    loop
+  Ready:
+    TNT1 A 1 A_WeaponReady
+    loop
+  Fire:
+    TNT1 A 1 A_SpawnItemEx("BallBomb", 0, 0, -4)
+	   TNT1 A 0 A_PlaySound("BOMBDR", 2)
+    TNT1 A 8
+    TNT1 A 8
+    TNT1 A 4
+    TNT1 A 1 A_ReFire
+    goto Ready
+  }
+}
+
+ACTOR BallBomb
+{
+  Radius 3
+  Height 3
+  Speed 0
+  +NOGRAVITY
+  -SOLID
+  +NOCLIP
+  +NOBLOOD
+  DamageType "NoPlayerDamage"
+  States
+  {
+  Spawn:
+    MBOM ABCD 5 Bright
+    MBOM E 0 A_Explode(100, 64)
+	   MBOM E 0 A_PlaySound("MBOOM", 3)
+    MBOM EFGHI 4 Bright
+    goto Death
+  Death:
+	   TNT1 A 0
+	   Stop
+  }
+}
+
+ACTOR PowerBeam : DoomWeapon
+{
+  + WEAPON.AMMO_OPTIONAL
+  + WEAPON.CHEATNOTWEAPON
+  Weapon.AmmoType2 "MissileAmmo"
+  Weapon.AmmoUse2 1
+  States
+  {
+  Ready:
+    ARMC A 1 A_WeaponReady
+    Loop
+  Deselect:
+    ARMC AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Lower
+    ARMC A 1 A_Lower
+    Loop
+  Select:
+    goto Ready
+  Fire:
+    ACPB A 0 A_GunFlash
+	   ACPB A 0 A_PlayWeaponSound("PSHOT")
+    ACPB AB 4
+    ACPB C 3 Offset(6,36) A_FireCustomMissile("PowerShot", 0, False, 5, -2)
+    ACPB DB 1 Offset(3,33)
+	   ACPB A 1 Offset(1,31)
+    ACPB A 0 A_ReFire
+    Goto Ready
+  AltFire:
+    ACMS A 0 A_PlaySound("MSHOT", 2)
+    ACMS AB 8 Offset(2,35)
+    ACMS C 8 Offset(3,36) A_FireCustomMissile ("NormalMissile", 0, True, 5, -5)
+    ACMS D 2 Offset(2,35)
+    ACMS A 0 A_ReFire
+    Goto Ready
+  Flash:
+    PBFL ABCD 3 Bright
+	   TNT1 A 2
+	   Wait
+  }
+}
+
+ACTOR ChargeBeam : PowerBeam
+{
+  Tag "Charge Beam"
+  States
+  {
+  Fire:
+    ACPC B 2
+    ACPC A 2
+    ACPC B 1 A_JumpIfInventory("ChargeCounter", 10, "Charge1")
+    ACPC B 0 A_GiveInventory("ChargeCounter", 2)
+	   ACPC B 0 A_PlaySound("CHARGEST", 1, 0.5, 1)
+    ACPC B 0 A_ReFire
+    ACPC B 1
+	   ACPC B 0 A_PlaySound("CSHOT", 2)
+	   ACPC B 0 A_GunFlash
+    ACPC C 2 Offset(6,34) A_FireCustomMissile("ChargeShot", 0, False, 5, -2)
+    ACPC D 2 Offset(3,33)
+   	ACPC B 2 Offset(1,31)
+    ACPC A 0 A_TakeInventory("ChargeCounter", 9999)
+   	ACPC B 0 A_StopSound(1)
+    goto Ready
+  Charge1:
+    ACPC AB 2
+    ACPC B 1 A_JumpIfInventory("ChargeCounter", 20, "Charge2")
+    ACPC B 0 A_GiveInventory("ChargeCounter", 2)
+    ACPC B 0 A_ReFire("Charge1")
+   	ACPC B 0 A_PlaySound("CSHOT", 2)
+   	ACPC B 0 A_GunFlash
+    ACPC AB 1
+   	ACPC C 2 Offset(6,36) A_FireCustomMissile("ChargeShot1", 0, False, 5, -2)
+    ACPC DB 2 Offset(3,33)
+	   ACPC A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACPC B 0 A_StopSound(1)
+    goto Ready
+  Charge2:
+    ACPC BC 2
+    ACPC B 1 A_JumpIfInventory("ChargeCounter", 30, "Charge3")
+    ACPC B 0 A_GiveInventory("ChargeCounter", 2)
+    ACPC B 0 A_ReFire("Charge2")
+	   ACPC B 0 A_PlaySound("CSHOT", 2)
+	   ACPC B 0 A_GunFlash
+    ACPC AB 1
+	   ACPC C 2 Offset(6,36) A_FireCustomMissile("ChargeShot2", 0, False, 5, -2)
+    ACPC DB 2 Offset(3,33)
+	   ACPC A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACPC B 0 A_StopSound(1)
+    goto Ready
+  Charge3:
+    ACPC B 1
+    ACPC CD 4
+	   ACPC B 0 A_PlaySound("CHARGEMD", 1, 0.5, 1)
+    ACPC C 5
+    ACPC C 0 A_ReFire("Charge3")
+	   ACPC B 0 A_PlaySound("CSHOT", 2)
+	   ACPC B 0 A_GunFlash
+    ACPC AB 1
+	   ACPC C 2 Offset(6,36) A_FireCustomMissile("ChargeShot3", 0, False, 5, -2)
+    ACPC DB 2 Offset(3,33)
+	   ACPC A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+   	ACPC B 0 A_StopSound(1)
+    goto Ready
+  Spawn:
+    CHBM AB 4
+    loop
+  Flash:
+    CBFL ABCDEF 3 Bright
+   	TNT1 A 2
+   	Wait
+  }
+}
+
+ACTOR IceBeam : PowerBeam
+{
+  Tag "Ice Beam"
+  States
+  {
+  Fire:
+    ACIC B 2
+    ACIC A 2
+    ACIC B 1 A_JumpIfInventory("ChargeCounter", 10, "Charge1")
+    ACIC B 0 A_GiveInventory("ChargeCounter", 1)
+	   ACIC B 0 A_PlaySound("CHARGEST", 1, 0.5, 1)
+    ACIC B 0 A_ReFire
+    ACIC B 1
+	   ACIC B 0 A_PlaySound("ISHOT", 2)
+	   ACIC B 0 A_GunFlash
+    ACIB C 2 Offset(6,34) A_FireCustomMissile("IceShot", 0, False, 5, -2)
+    ACIB D 2 Offset(3,33)
+   	ACIB B 2 Offset(1,31)
+    ACIB A 0 A_TakeInventory("ChargeCounter", 9999)
+   	ACIB B 0 A_StopSound(1)
+    goto Ready
+  Charge1:
+    ACIC AB 2
+    ACIC B 1 A_JumpIfInventory("ChargeCounter", 20, "Charge2")
+    ACIC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACIC B 0 A_ReFire("Charge1")
+   	ACIC B 0 A_PlaySound("ISHOT", 2)
+   	ACIC B 0 A_GunFlash
+    ACIB AB 1
+   	ACIB C 2 Offset(6,36) A_FireCustomMissile("IceShot1", 0, False, 5, -2)
+    ACIB DB 2 Offset(3,33)
+	   ACIB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACIB B 0 A_StopSound(1)
+    goto Ready
+  Charge2:
+    ACIC BC 2
+    ACIC B 1 A_JumpIfInventory("ChargeCounter", 30, "Charge3")
+    ACIC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACIC B 0 A_ReFire("Charge2")
+	   ACIC B 0 A_PlaySound("ISHOT", 2)
+	   ACIC B 0 A_GunFlash
+    ACIB AB 1
+	   ACIB C 2 Offset(6,36) A_FireCustomMissile("IceShot2", 0, False, 5, -2)
+    ACIB DB 2 Offset(3,33)
+	   ACIB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACIB B 0 A_StopSound(1)
+    goto Ready
+  Charge3:
+    ACIC B 1
+    ACIC CD 4
+	   ACIC B 0 A_PlaySound("CHARGEMD", 1, 0.5, 1)
+    ACIC C 5
+    ACIC C 0 A_ReFire("Charge3")
+	   ACIC B 0 A_PlaySound("ISHOT", 2)
+	   ACIC B 0 A_GunFlash
+    ACIB AB 1
+	   ACIB C 2 Offset(6,36) A_FireCustomMissile("IceShot3", 0, False, 5, -2)
+    ACIB DB 2 Offset(3,33)
+	   ACIB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+   	ACIB B 0 A_StopSound(1)
+    goto Ready
+  Spawn:
+    ICBM AB 4
+    loop
+  Flash:
+    IBFL ABCDE 3 Bright
+	   TNT1 A 2
+	   Wait
+  }
+}
+
+ACTOR WaveBeam : PowerBeam
+{
+  Tag "Wave Beam"
+  States
+  {
+  Fire:
+    ACWC B 2
+    ACWC A 2
+    ACWC B 1 A_JumpIfInventory("ChargeCounter", 10, "Charge1")
+    ACWC B 0 A_GiveInventory("ChargeCounter", 1)
+	   ACWC B 0 A_PlaySound("CHARGEST", 1, 0.5, 1)
+    ACWC B 0 A_ReFire
+    ACWC B 1
+	   ACWC B 0 A_PlaySound("WSHOT", 2)
+	   ACWC B 0 A_GunFlash
+    ACWB C 2 Offset(6,34) A_FireCustomMissile("WaveShot", 0, False, 5, -2)
+    ACWB D 2 Offset(3,33)
+   	ACWB B 2 Offset(1,31)
+    ACWB A 0 A_TakeInventory("ChargeCounter", 9999)
+   	ACWB B 0 A_StopSound(1)
+    goto Ready
+  Charge1:
+    ACWC AB 2
+    ACWC B 1 A_JumpIfInventory("ChargeCounter", 20, "Charge2")
+    ACWC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACWC B 0 A_ReFire("Charge1")
+   	ACWC B 0 A_PlaySound("WSHOT", 2)
+   	ACWC B 0 A_GunFlash
+    ACWB AB 1
+   	ACWB C 2 Offset(6,36) A_FireCustomMissile("WaveShot1", 0, False, 5, -2)
+    ACWB DB 2 Offset(3,33)
+	   ACWB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACWB B 0 A_StopSound(1)
+    goto Ready
+  Charge2:
+    ACWC BC 2
+    ACWC B 1 A_JumpIfInventory("ChargeCounter", 30, "Charge3")
+    ACWC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACWC B 0 A_ReFire("Charge2")
+	   ACWC B 0 A_PlaySound("WSHOT", 2)
+	   ACWC B 0 A_GunFlash
+    ACWB AB 1
+	   ACWB C 2 Offset(6,36) A_FireCustomMissile("WaveShot2", 0, False, 5, -2)
+    ACWB DB 2 Offset(3,33)
+	   ACWB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACWB B 0 A_StopSound(1)
+    goto Ready
+  Charge3:
+    ACWC B 1
+    ACWC CD 4
+	   ACWC B 0 A_PlaySound("CHARGEMD", 1, 0.5, 1)
+    ACWC C 5
+    ACWC C 0 A_ReFire("Charge3")
+	   ACWC B 0 A_PlaySound("WSHOT", 2)
+	   ACWC B 0 A_GunFlash
+    ACWB AB 1
+	   ACWB C 2 Offset(6,36) A_FireCustomMissile("WaveShot3", 0, False, 5, -2)
+    ACWB DB 2 Offset(3,33)
+	   ACWB A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+   	ACWB B 0 A_StopSound(1)
+    goto Ready
+  Spawn:
+    WVBM AB 4
+    loop
+  Flash:
+    WBFL ABCDE 3 Bright
+   	TNT1 A 2
+   	Wait
+  }
+}
+
+ACTOR PlasmaBeam : PowerBeam
+{
+  Tag "Plasma Beam"
+  States
+  {
+  Fire:
+    ACSC B 2
+    ACSC A 2
+    ACSC B 1 A_JumpIfInventory("ChargeCounter", 10, "Charge1")
+    ACSC B 0 A_GiveInventory("ChargeCounter", 1)
+	   ACSC B 0 A_PlaySound("CHARGEST", 1, 0.5, 1)
+    ACSC B 0 A_ReFire
+    ACSC B 1
+	   ACSC B 0 A_PlaySound("PLSHOT", 2)
+	   ACSC B 0 A_GunFlash
+    ACPL C 2 Offset(6,34) A_FireCustomMissile("PlasmaShot", 0, False, 5, -2)
+    ACPL D 2 Offset(3,33)
+   	ACPL B 2 Offset(1,31)
+    ACPL A 0 A_TakeInventory("ChargeCounter", 9999)
+   	ACPL B 0 A_StopSound(1)
+    goto Ready
+  Charge1:
+    ACSC AB 2
+    ACSC B 1 A_JumpIfInventory("ChargeCounter", 20, "Charge2")
+    ACSC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACSC B 0 A_ReFire("Charge1")
+   	ACSC B 0 A_PlaySound("PLSHOT", 2)
+   	ACSC B 0 A_GunFlash
+    ACPL AB 1
+   	ACPL C 2 Offset(6,36) A_FireCustomMissile("PlasmaShot1", 0, False, 5, -2)
+    ACPL DB 2 Offset(3,33)
+	   ACPL A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACPL B 0 A_StopSound(1)
+    goto Ready
+  Charge2:
+    ACSC BC 2
+    ACSC B 1 A_JumpIfInventory("ChargeCounter", 30, "Charge3")
+    ACSC B 0 A_GiveInventory("ChargeCounter", 1)
+    ACSC B 0 A_ReFire("Charge2")
+	   ACSC B 0 A_PlaySound("PLSHOT", 2)
+	   ACSC B 0 A_GunFlash
+    ACPL AB 1
+	   ACPL C 2 Offset(6,36) A_FireCustomMissile("PlasmaShot2", 0, False, 5, -2)
+    ACPL DB 2 Offset(3,33)
+	   ACPL A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+	   ACPL B 0 A_StopSound(1)
+    goto Ready
+  Charge3:
+    ACSC B 1
+    ACSC CD 4
+	   ACSC B 0 A_PlaySound("CHARGEMD", 1, 0.5, 1)
+    ACSC C 5
+    ACSC C 0 A_ReFire("Charge3")
+	   ACSC B 0 A_PlaySound("PLSHOT", 2)
+	   ACSC B 0 A_GunFlash
+    ACPL AB 1
+	   ACPL C 2 Offset(6,36) A_FireCustomMissile("PlasmaShot3", 0, False, 5, -2)
+    ACPL DB 2 Offset(3,33)
+	   ACPL A 2 Offset(1,31) A_TakeInventory("ChargeCounter", 9999)
+   	ACPL B 0 A_StopSound(1)
+    goto Ready
+  Spawn:
+    PLBM AB 4
+    loop
+  Flash:
+    PLFL ABCDEF 2 Bright
+	   TNT1 A 3
+   	Wait
+  }
+}
+
+ACTOR MissileLauncher : DoomWeapon
+{
+  Tag "Missile Launcher"
+  Inventory.PickupSound ""
+  Weapon.AmmoType1 "SuperMissileAmmo"
+  Weapon.AmmoType2 "MissileAmmo"
+  Weapon.AmmoUse1 1
+  Weapon.AmmoUse2 1
+  + WEAPON.CHEATNOTWEAPON
+  States
+  {
+  Ready:
+    ARMC A 1 A_WeaponReady
+    Loop
+  Deselect:
+    ARMC AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_Lower
+    ARMC A 1 A_Lower
+  Select:
+    goto Ready
+  Fire:
+    ACMS A 0 A_PlaySound("SMSHOT", 2)
+    ACMS AB 8 Offset(2,36) A_GunFlash
+    ACMS D 9 Offset(3,37) A_FireCustomMissile ("SuperMissile", 0, True, 5, -2)
+    ACMS CB 3 Offset(2,35)
+    ACMS A 0 A_ReFire
+    Goto Ready
+  AltFire:
+    ACMS A 0 A_PlaySound("MSHOT", 2)
+    ACMS AB 8 Offset(2,35)
+    ACMS C 8 Offset(3,36) A_FireCustomMissile ("NormalMissile", 0, True, 5, -5)
+    ACMS D 2 Offset(2,35)
+    ACMS A 0 A_ReFire
+    Goto Ready
+  }
+}

@@ -1,0 +1,81 @@
+ACTOR Geruto : MonsterBase
+{
+  +SPAWNFLOAT
+  +FLOATBOB
+  +NOGRAVITY
+  Health 30
+  Height 32
+  Radius 12
+  Speed 6
+  Obituary "%o was shot by a Geruto."
+  DamageType "NoMonsterDamage"
+  DamageFactor "Beam", 0.0
+  States
+  {
+  Spawn:
+    MOBA AB 5
+    MOBA A 0 A_Look
+    Loop
+  See:
+    MOBA AB 5 A_Chase
+    MOBA AAAAAAAAAA 0 A_SpawnItemEx("WaveParticle", random(-10.0, 10.0), random(-10.0, 10.0), random(-10.0, 20.0), 0, 0, 0, 0, 0, 5)
+    Loop
+  Missile:
+    MOBA CDE 8 A_FaceTarget
+    MOBA E 1 A_CustomMissile("GerutoShot", 2)
+    MOBA DCB 6
+    Goto See
+  Pain:
+    MOBA A 1 Thing_SetTranslation(0, 7)
+    MOBA B 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    MOBA A 1 A_Scream
+    MOBA A 0 A_NoBlocking
+    MOBA A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    MOBA A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("GerutoIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR GerutoIce : IceBase
+{
+  Height 32
+  Radius 16
+  States
+  {
+  Spawn:
+    MOBA A 500
+    MOBA A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    MOBA A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    MOBA A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR GerutoShot
+{
+  height 4
+  radius 2
+  damage (20)
+  speed 15
+  Scale 0.8
+  PROJECTILE
+  +RANDOMIZE
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    MBST ABC 1 A_SpawnItemEx("WaveParticle", random(-5.0, 5.0), random(-5.0, 5.0), random(-5.0, 5.0), 0, 0, 0, 0, 0, 5)
+    Loop
+  Death:
+    MBST DE 1
+    Stop
+  }
+}

@@ -1,0 +1,80 @@
+ACTOR Naksis : MonsterBase 10053
+{
+  +BOSS
+  +NOVERTICALMELEERANGE
+  +NOICEDEATH
+  Height 128
+  Radius 48
+  Mass 400
+  Speed 18
+  Health 600
+  Obituary "%o was flattened by Naksis."
+  DeathSound "NAKSIS"
+  DamageFactor "Beam", 0.0
+  DamageFactor "Missile", 0.5
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  MeleeRange 96
+  States
+  {
+  Spawn:
+    NKSS ABAC 12 A_Look
+    Loop
+  See:
+    NKSS A 0 A_Scream
+    NKSS ABACABC 8 A_Chase
+	   NKSS D 0 A_Jump(200, "Jump")
+	   Loop
+  Jump:
+    NKSS D 0 A_FaceTarget
+    NKSS D 10 A_ChangeVelocity(random(15,20), 0, random(25,35), CVF_RELATIVE)
+    NKSS D 20
+  CheckVel1:
+    NKSS B 4 A_JumpIf(velz == 0, "CheckVel2")
+    Loop
+  CheckVel2:
+    NKSS B 1 A_JumpIf(velz == 0, "Land")
+    Loop
+  Land:
+    NKSS A 0 A_PlaySound("SLAM")
+    NKSS C 0 A_Quake(5, 20, 0, 1024, "")
+    NKSS C 0 A_SpawnItemEx("NaksisBoom")
+    NKSS C 10 A_CustomMeleeAttack((40))
+    Goto See
+  Pain:
+    NKSS A 2 Thing_SetTranslation(0, 7)
+    NKSS A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Pain.Missile:
+    NKSS A 2 Thing_SetTranslation(0, 7)
+    NKSS A 1 Thing_SetTranslation(0, 0)
+    Goto Jump
+  Death:
+    NKSS C 0 A_Quake(5, 20, 0, 1024, "")
+    NKSS ABCABCABCA 6 A_Scream
+    NKSS A 0 A_NoBlocking
+    NKSS AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", random(-300, 300), random(-300, 300), random(-300, 300), 0, 0, 0, 0, 0, 0, tid)
+    NKSS AAA 0 A_SpawnDebris("Chunk")
+    Stop
+  }
+}
+
+ACTOR NaksisBoom
+{
+  Radius 144
+  Height 64
+  Speed 100
+  Projectile
+  Damage (20)
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    TNT1 A 10
+	   Goto Death
+	 Death:
+	   TNT1 A 1
+	   Stop
+  }
+}

@@ -1,0 +1,235 @@
+ACTOR TunnelWorm : MonsterBase 10054
+{
+  +NOGRAVITY
+  +BOSS
+  +NOICEDEATH
+  Height 96
+  Radius 32
+  Mass 0x7FFFFFFF
+  Health 120
+  DeathSound "WORMCALL"
+  Obituary "%o became Tunnel Worm food."
+  DamageFactor "Beam", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "SpeedBooster", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WMHD ABCB 12 A_Look
+    Loop
+  See:
+    WMHD ABCB 12
+    WMHD A 0 A_PlaySound("RDLBITE1")
+    WMHD A 1 A_CustomMeleeAttack((40))
+    WMHD BCB 6 A_CustomMissile("WormSpit")
+    Loop
+  Pain:
+    WMHD C 0 A_Quake(5, 75, 0, 1024, "")
+    WMHD A 2 Thing_SetTranslation(0, 7)
+    WMHD B 1 Thing_SetTranslation(0, 0)
+    WMHD A 0 A_Scream
+    Goto Spit
+  Pain.Missile:
+    WMHD C 0 A_Quake(5, 20, 0, 1024, "")
+    WMHD A 2 Thing_SetTranslation(0, 7)
+    WMHD B 1 Thing_SetTranslation(0, 0)
+    WMHD A 0 A_Scream
+    WMHD A 0 A_PlaySound("RDLBITE1")
+    WMHD BB 1 A_CustomMissile("WormSpit", 32, 0, random(300, 320), 0, random(-15, -30))
+    WMHD CC 1 A_CustomMissile("WormSpit", 32, 0, 0, 0, random(-15, -30))
+    WMHD BB 1 A_CustomMissile("WormSpit", 32, 0, random(30, 60), 0, random(-15, -30))
+    WMHD A 0 A_SpawnItemEx("WormShield", 32, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+    Goto Spawn
+  Spit:
+    WMHD A 0 A_PlaySound("RDLBITE1")
+    WMHD ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(300, 320), 0, random(-15, -30))
+    WMHD A 0 A_PlaySound("RDLBITE1")
+    WMHD ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(-15, -30))
+    WMHD A 0 A_PlaySound("RDLBITE1")
+    WMHD ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(30, 60), 0, random(-15, -30))
+    WMHD A 0 A_SpawnItemEx("WormShield", 32, 0, 0, 0, 0, 0, 0, SXF_NOCHECKPOSITION)
+    WMHD A 0 A_Scream
+    Goto Spawn
+  Death:
+    WMHD C 0 A_Quake(9, 500, 0, 2048, "")
+    WMHD A 0 A_Scream
+    WMHD ABCAB 12
+    WMHD A 0 A_NoBlocking
+    WMHD AAAAAAAAAA 0 A_SpawnItemEx("PickupSpawnerEnergyMissiles", random(-300, 300), random(-300, 300), random(-300, 300), 0, 0, 0, 0, 0, 0, tid)
+    WMHD AAA 0 A_SpawnDebris("Chunk")
+    Stop
+  }
+}
+
+ACTOR TunnelWormTurret : MonsterBase 10057
+{
+  +NOGRAVITY
+  +NOICEDEATH
+  Height 32
+  Radius 16
+  Speed 0
+  Mass 0x7FFFFFFF
+  Health 0x7FFFFFFF
+  DeathSound "WORMCALL"
+  Obituary "%o became Tunnel Worm food."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Charge", 0.0
+  DamageFactor "Ice", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "SpeedBooster", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WMTR ABCB 12 A_Look
+    Loop
+  Spawn:
+    WMTR ABCB 8 A_Chase
+    Loop
+  Missile:
+    WMTR A 0 A_PlaySound("RDLBITE1")
+    WMTR ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(300, 320), 0, random(-15, -30))
+    WMTR A 0 A_PlaySound("RDLBITE1")
+    WMTR ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(-15, -30))
+    WMTR A 0 A_PlaySound("RDLBITE1")
+    WMTR ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(30, 60), 0, random(-15, -30))
+    Goto Spawn
+  Death:
+    WMTR C 0 A_Quake(9, 250, 0, 2048, "")
+    WMTR A 0 A_Scream
+    WMTR ABCAB 12
+    WMTR A 0 A_NoBlocking
+    WMTR AAAAA 0 A_SpawnItemEx("PickupSpawnerEnergy", random(-300, 300), random(-300, 300), random(-300, 300), 0, 0, 0, 0, 0, 0, tid)
+    WMTR AAA 0 A_SpawnDebris("Chunk")
+    Stop
+  }
+}
+
+ACTOR TunnelWormCeilingTurret : MonsterBase 10058
+{
+  +NOGRAVITY
+  +NOICEDEATH
+  +SPAWNCEILING
+  Height 32
+  Radius 16
+  Speed 0
+  Mass 0x7FFFFFFF
+  Health 0x7FFFFFFF
+  DeathSound "WORMCALL"
+  Obituary "%o became Tunnel Worm food."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Charge", 0.0
+  DamageFactor "Ice", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "SpeedBooster", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WMT2 ABCB 12 A_Look
+    Loop
+  Spawn:
+    WMT2 ABCB 8 A_Chase
+    Loop
+  Missile:
+    WMT2 A 0 A_PlaySound("RDLBITE1")
+    WMT2 ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(300, 320), 0, random(-15, -30))
+    WMT2 A 0 A_PlaySound("RDLBITE1")
+    WMT2 ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(-15, -30))
+    WMT2 A 0 A_PlaySound("RDLBITE1")
+    WMT2 ABCB 4 A_CustomMissile("WormSpit", 32, 0, random(30, 60), 0, random(-15, -30))
+    Goto Spawn
+  Death:
+    WMT2 C 0 A_Quake(9, 250, 0, 2048, "")
+    WMT2 A 0 A_Scream
+    WMT2 ABCAB 12
+    WMT2 A 0 A_NoBlocking
+    WMT2 AAAAA 0 A_SpawnItemEx("PickupSpawnerEnergy", random(-300, 300), random(-300, 300), random(-300, 300), 0, 0, 0, 0, 0, 0, tid)
+    WMT2 AAA 0 A_SpawnDebris("Chunk")
+    Stop
+  }
+}
+
+ACTOR WormNode : MonsterBase 10055
+{
+  +NOGRAVITY
+  +NOICEDEATH
+  +FLOATBOB
+  +SOLID
+  Height 16
+  Radius 8
+  Mass 0x7FFFFFFF
+  Health 0x7FFFFFFF
+  DamageFactor "Beam", 0.0
+  DamageFactor "Charge", 0.0
+  DamageFactor "Ice", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "SpeedBooster", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WMND A 1
+    Loop
+  Death:
+    WMND C 0 A_Quake(9, 250, 0, 2048, "")
+    WMND ABCAB 12
+    WMND A 0 A_NoBlocking
+    WMND AAA 0 A_SpawnDebris("Chunk")
+    Stop
+  }
+}
+
+ACTOR WormShield : MonsterBase 10056
+{
+  +NOICEDEATH
+  -SOLID
+  +SHOOTABLE
+  RenderStyle Translucent
+	 Alpha 0.4
+  Height 64
+  Radius 32
+  Mass 0x7FFFFFFF
+  Health 999
+  DamageFactor "Beam", 0.0
+  DamageFactor "Charge", 0.0
+  DamageFactor "Ice", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WMSH A 1
+    Loop
+  }
+}
+
+ACTOR WormSpit
+{
+  height 2
+  radius 2
+  damage (5)
+  speed 10
+  Gravity 0.8
+  PROJECTILE
+  +RANDOMIZE
+  -NOGRAVITY
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    WMSP ABC 3
+    loop
+  Death:
+    WMSP A 1
+    stop
+  }
+}

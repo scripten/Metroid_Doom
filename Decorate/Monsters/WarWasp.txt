@@ -1,0 +1,88 @@
+ACTOR WarWasp : MonsterBase
+{
+  +SPAWNFLOAT
+  +FLOATBOB
+  +FLOAT
+  +NOGRAVITY
+  Health 20
+  Height 24
+  Radius 12
+  Speed 6
+  Scale 0.25
+  ActiveSound "WASPBZZ"
+  Obituary "%o was stung by a War Wasp."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    WASP ABABBA 1 A_LoopActiveSound
+    WASP A 0 A_Look
+    Loop
+  See:
+    WASP ABABBA 1 A_Chase
+    WASP ABABBA 1 A_Wander
+    WASP ABABBA 1 A_Wander
+    WASP ABABBA 1 A_Wander
+    Loop
+  Missile:
+    WASP ABABBA 1
+    WASP ABABBA 1 A_FaceTarget
+    WASP A 1 A_CustomMissile("WaspShot", 2)
+    Goto See
+  Pain:
+    WASP A 1 Thing_SetTranslation(0, 7)
+    WASP B 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    WASP B 1 A_StopSound
+    WASP A 1 A_Scream
+    WASP A 0 A_NoBlocking
+    WASP A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    WASP A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("WarWaspIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR WarWaspIce : IceBase
+{
+  Height 48
+  Radius 16
+  Scale 0.25
+  States
+  {
+  Spawn:
+    WASP A 500
+    WASP A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    WASP A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    WASP A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR WaspShot
+{
+  height 2
+  radius 2
+  damage (10)
+  speed 10
+  Scale 0.3
+  PROJECTILE
+  +RANDOMIZE
+  +ROCKETTRAIL
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    CNK3 A 1
+    loop
+  Death:
+    CNK3 A 1
+    stop
+  }
+}

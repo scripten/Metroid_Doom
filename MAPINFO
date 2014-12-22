@@ -1,0 +1,40 @@
+GameInfo
+{
+  PlayerClasses = "PowersuitPlayer"
+
+  dimcolor = "0 0 100"
+  dimamount = 0.25
+  titlepage = "M_TITLE"
+  infopage = "M_HELP"
+  pausesign = "M_PAUSE"
+  pickupcolor = "50 50 50"
+  cursorpic = "cursor"
+
+	 menufontcolor_title = "LightRed"
+	 menufontcolor_label = "Gray"
+	 menufontcolor_value = "LightBlue"
+	 menufontcolor_action = "Gray"
+	 menufontcolor_header = "LightBlue"
+	 menufontcolor_highlight = "Yellow"
+	 menufontcolor_selection = "Yellow"
+}
+
+DefaultMap
+{
+	 allowfreelook
+  MissilesActivateImpactLines
+}
+
+ClearSkills
+
+Skill Normal
+{
+	SpawnFilter = 3
+	Name = "Start Game"
+}
+
+map MAP01 "Metroid Test Level"
+{
+  Music = "M_BLOSSM"
+  Sky1 = "MSKY1"
+}

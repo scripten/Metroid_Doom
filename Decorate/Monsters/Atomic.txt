@@ -1,0 +1,65 @@
+ACTOR Atomic : MonsterBase
+{
+  +JUMPDOWN
+  +SPAWNFLOAT
+  +FLOAT
+  +NOGRAVITY
+  +FORCEXYBILLBOARD
+  Health 40
+  Height 16
+  Radius 12
+  Speed 6
+  Scale 0.7
+  MeleeRange 128
+  Obituary "%o got shocked by an Atomic."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Electric", 0.0
+  DamageFactor "ChargeElectric", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    ATOM A 5 A_Look
+    Loop
+  See:
+    ATOM ABCDEF 5 A_Chase
+    ATOM A 0 A_CustomMeleeAttack((15))
+    ATOM A 0 A_SentinelBob
+    ATOM ABCDEF 5 A_Wander
+    ATOM A 0 A_CustomMeleeAttack((15))
+    ATOM A 0 A_SentinelBob
+    loop
+  Pain:
+    ATOM A 1 Thing_SetTranslation(0, 7)
+    ATOM A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    ATOM ABCDEF 1 A_Scream
+    ATOM A 0 A_NoBlocking
+    ATOM A 0 A_SpawnItemEx("PickupSpawner", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ATOM A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("AtomicIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR AtomicIce : IceBase
+{
+  Height 16
+  Radius 12
+  Scale 0.7
+  States
+  {
+  Spawn:
+    ATOM A 500
+    ATOM A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    ATOM A 0 A_SpawnItemEx("PickupSpawner", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ATOM A 0 A_FreezeDeathChunks
+    Stop
+  }
+}

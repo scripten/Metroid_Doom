@@ -1,0 +1,649 @@
+Statusbar Normal, FullScreenOffsets
+{
+  InInventory not DeathMarker {
+  InInventory WaterMarker {
+    Alpha 0.1
+    DrawImage "HUDWATER", 0, 0;
+  }
+  InInventory HeatMarker {
+    Alpha 0.1
+    DrawImage "HUDHEAT", 0, 0;
+  }
+  InInventory LavaMarker {
+    Alpha 0.1
+    DrawImage "HUDLAVA", 0, 0;
+  }
+  InInventory AcidMarker {
+    Alpha 0.1
+    DrawImage "HUDACID", 0, 0;
+  }
+  InInventory ScanMarker {
+    Alpha 0.5
+    DrawImage "HUDSCAN", 0, 0;
+  }
+  InInventory SpeedBooster {
+    Alpha 0.2
+    DrawBar "Boost_F", "Boost_E", BoostCounter, Horizontal, Reverse, 28, 280;
+  }
+  InInventory BoostMarker {
+    Alpha 0.5
+    DrawImage "Boost_M", 28, 280;
+  }
+  InInventory ShineMarker {
+    Alpha 0.5
+    DrawImage "Boost_S", 28, 280;
+  }
+  // Draw Weapon/Ammo information
+  Alpha 0.3
+  DrawImage "Missl", -128, 24;
+  InInventory MissileLauncher {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory MissileLauncher_Varia {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory MissileLauncher_Gravity {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory ChargeBeam {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory ChargeBeam_Varia {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory ChargeBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory IceBeam {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory IceBeam_Varia {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory IceBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory WaveBeam {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory WaveBeam_Varia {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory WaveBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory PlasmaBeam {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  InInventory PlasmaBeam_Varia {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  InInventory PlasmaBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected MissileLauncher {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected MissileLauncher_Varia {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected MissileLauncher_Gravity {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected ChargeBeam {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected ChargeBeam_Varia {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected ChargeBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected IceBeam {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected IceBeam_Varia {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected IceBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected WaveBeam {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected WaveBeam_Varia {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected WaveBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected PlasmaBeam {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected PlasmaBeam_Varia {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected PlasmaBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  Alpha 0.5
+  DrawNumber 3, HUDFONT_DOOM, Gray, Ammo MissileAmmo, drawshadow, -32, 32;
+
+  // Draw Energy information
+  Alpha 0.5
+  DrawImage "Energy", -320 + center, 144;
+  Alpha 0.5
+  DrawNumber 2, HUDFONT_DOOM, Gray, Health, fillzeros, dontcap, drawshadow, -204 + center, 144;
+  Alpha 0.5
+  DrawBar "BarFron", "BarBack", Health, Horizontal, Interpolate(8), -320 + center, 128;
+
+  // Here come the energy tanks ._.
+  InInventory ETank, 1 {
+    InInventory ETankBar, 1 {
+      Alpha 0.8
+      DrawImage "F_tank", -176 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -176 + center, 144;
+    }
+  }
+  InInventory ETank, 2 {
+    InInventory ETankBar, 2 {
+      Alpha 0.8
+      DrawImage "F_tank", -160 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -160 + center, 144;
+    }
+  }
+  InInventory ETank, 3 {
+    InInventory ETankBar, 3 {
+      Alpha 0.8
+      DrawImage "F_tank", -144 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -144 + center, 144;
+    }
+  }
+  InInventory ETank, 4 {
+    InInventory ETankBar, 4 {
+      Alpha 0.8
+      DrawImage "F_tank", -128 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -128 + center, 144;
+    }
+  }
+  InInventory ETank, 5 {
+    InInventory ETankBar, 5 {
+      Alpha 0.8
+      DrawImage "F_tank", -112 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -112 + center, 144;
+    }
+  }
+  InInventory ETank, 6 {
+    InInventory ETankBar, 6 {
+      Alpha 0.8
+      DrawImage "F_tank", -96 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -96 + center, 144;
+    }
+  }
+  InInventory ETank, 7 {
+    InInventory ETankBar, 7 {
+      Alpha 0.8
+      DrawImage "F_tank", -80 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -80 + center, 144;
+    }
+  }
+  InInventory ETank, 8 {
+    InInventory ETankBar, 8 {
+      Alpha 0.8
+      DrawImage "F_tank", -64 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -64 + center, 144;
+    }
+  }
+  InInventory ETank, 9 {
+    InInventory ETankBar, 9 {
+      Alpha 0.8
+      DrawImage "F_tank", -48 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -48 + center, 144;
+    }
+  }
+  InInventory ETank, 10 {
+    InInventory ETankBar, 10 {
+      Alpha 0.8
+      DrawImage "F_tank", -32 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -32 + center, 144;
+    }
+  }
+  InInventory ETank, 11 {
+    InInventory ETankBar, 11 {
+      Alpha 0.8
+      DrawImage "F_tank", -16 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", -16 + center, 144;
+    }
+  }
+  InInventory ETank, 12 {
+    InInventory ETankBar, 12 {
+      Alpha 0.8
+      DrawImage "F_tank", 0 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 0 + center, 144;
+    }
+  }
+  InInventory ETank, 13 {
+    InInventory ETankBar, 13 {
+      Alpha 0.8
+      DrawImage "F_tank", 16 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 16 + center, 144;
+    }
+  }
+  InInventory ETank, 14 {
+    InInventory ETankBar, 14 {
+      Alpha 0.8
+      DrawImage "F_tank", 32 + center, 144;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 32 + center, 144;
+    }
+  }
+  }
+  // Draw HUD border
+  DrawImage "HemTop", -623 + center, 0;
+  DrawImage "HemLeft", 0, -70;
+  DrawImage "HemRight", -467, -70;
+}
+
+Statusbar FullScreen, FullScreenOffsets
+{
+  InInventory not DeathMarker {
+  InInventory WaterMarker {
+    Alpha 0.1
+    DrawImage "HUDWATER", 0, 0;
+  }
+  InInventory HeatMarker {
+    Alpha 0.1
+    DrawImage "HUDHEAT", 0, 0;
+  }
+  InInventory LavaMarker {
+    Alpha 0.1
+    DrawImage "HUDLAVA", 0, 0;
+  }
+  InInventory SpeedBooster {
+    Alpha 0.2
+    DrawBar "Boost_F", "Boost_E", BoostCounter, Horizontal, Reverse, 28, 280;
+  }
+  InInventory BoostMarker {
+    Alpha 0.5
+    DrawImage "Boost_M", 28, 280;
+  }
+  InInventory ShineMarker {
+    Alpha 0.5
+    DrawImage "Boost_S", 28, 280;
+  }
+  // Draw Weapon/Ammo information
+  Alpha 0.3
+  DrawImage "Missl", -128, 24;
+  InInventory MissileLauncher {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory MissileLauncher_Varia {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory MissileLauncher_Gravity {
+    Alpha 0.3
+    DrawImage "SMissl", -128, 58;
+    Alpha 0.5
+    DrawNumber 3, HUDFONT_DOOM, Gray, Ammo SuperMissileAmmo, drawshadow, -32, 64;
+  }
+  InInventory ChargeBeam {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory ChargeBeam_Varia {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory ChargeBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BCharg", -128, 92;
+    Alpha 0.2
+    DrawBar "Meter_F", "Meter_E", ChargeCounter, Vertical, 32, 200;
+  }
+  InInventory IceBeam {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory IceBeam_Varia {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory IceBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BIce", -128, 126;
+  }
+  InInventory WaveBeam {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory WaveBeam_Varia {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory WaveBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BWave", -128, 160;
+  }
+  InInventory PlasmaBeam {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  InInventory PlasmaBeam_Varia {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  InInventory PlasmaBeam_Gravity {
+    Alpha 0.3
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected MissileLauncher {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected MissileLauncher_Varia {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected MissileLauncher_Gravity {
+    Alpha 0.8
+    DrawImage "SMissl", -128, 58;
+  }
+  IsSelected ChargeBeam {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected ChargeBeam_Varia {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected ChargeBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BCharg", -128, 92;
+  }
+  IsSelected IceBeam {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected IceBeam_Varia {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected IceBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BIce", -128, 126;
+  }
+  IsSelected WaveBeam {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected WaveBeam_Varia {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected WaveBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BWave", -128, 160;
+  }
+  IsSelected PlasmaBeam {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected PlasmaBeam_Varia {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  IsSelected PlasmaBeam_Gravity {
+    Alpha 0.8
+    DrawImage "BPlasm", -128, 194;
+  }
+  Alpha 0.5
+  DrawNumber 3, HUDFONT_DOOM, Gray, Ammo MissileAmmo, drawshadow, -32, 32;
+
+  // Draw Energy information
+  Alpha 0.5
+  DrawImage "Energy", 32, 48;
+  Alpha 0.5
+  DrawNumber 2, HUDFONT_DOOM, Gray, Health, fillzeros, dontcap, drawshadow, 128, 48;
+  Alpha 0.5
+  DrawBar "SM_bF", "SM_bB", Health, Horizontal, Interpolate(8), 32, 64;
+
+  // Here come the energy tanks ._.
+  InInventory ETank, 1 {
+    InInventory ETankBar, 1 {
+      Alpha 0.8
+      DrawImage "F_tank", 32, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 32, 96;
+    }
+  }
+  InInventory ETank, 2 {
+    InInventory ETankBar, 2 {
+      Alpha 0.8
+      DrawImage "F_tank", 48, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 48, 96;
+    }
+  }
+  InInventory ETank, 3 {
+    InInventory ETankBar, 3 {
+      Alpha 0.8
+      DrawImage "F_tank", 64, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 64, 96;
+    }
+  }
+  InInventory ETank, 4 {
+    InInventory ETankBar, 4 {
+      Alpha 0.8
+      DrawImage "F_tank", 80, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 80, 96;
+    }
+  }
+  InInventory ETank, 5 {
+    InInventory ETankBar, 5 {
+      Alpha 0.8
+      DrawImage "F_tank", 96, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 96, 96;
+    }
+  }
+  InInventory ETank, 6 {
+    InInventory ETankBar, 6 {
+      Alpha 0.8
+      DrawImage "F_tank", 112, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 112, 96;
+    }
+  }
+  InInventory ETank, 7 {
+    InInventory ETankBar, 7 {
+      Alpha 0.8
+      DrawImage "F_tank", 128, 96;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 128, 96;
+    }
+  }
+  InInventory ETank, 8 {
+    InInventory ETankBar, 8 {
+      Alpha 0.8
+      DrawImage "F_tank", 32, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 32, 112;
+    }
+  }
+  InInventory ETank, 9 {
+    InInventory ETankBar, 9 {
+      Alpha 0.8
+      DrawImage "F_tank", 48, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 48, 112;
+    }
+  }
+  InInventory ETank, 10 {
+    InInventory ETankBar, 10 {
+      Alpha 0.8
+      DrawImage "F_tank", 64, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 64, 112;
+    }
+  }
+  InInventory ETank, 11 {
+    InInventory ETankBar, 11 {
+      Alpha 0.8
+      DrawImage "F_tank", 80, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 80, 112;
+    }
+  }
+  InInventory ETank, 12 {
+    InInventory ETankBar, 12 {
+      Alpha 0.8
+      DrawImage "F_tank", 96, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 96, 112;
+    }
+  }
+  InInventory ETank, 13 {
+    InInventory ETankBar, 13 {
+      Alpha 0.8
+      DrawImage "F_tank", 112, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 112, 112;
+    }
+  }
+  InInventory ETank, 14 {
+    InInventory ETankBar, 14 {
+      Alpha 0.8
+      DrawImage "F_tank", 128, 112;
+    }
+    Else {
+      Alpha 0.3
+      DrawImage "E_tank", 128, 112;
+    }
+  }
+  }
+  // Draw HUD border
+  DrawImage "SM_hT", -300 + center, 0;
+  DrawImage "SM_hL", 0, -30;
+  DrawImage "SM_hR", -200, -30;
+}

@@ -1,0 +1,7 @@
+#library "Boss"
+#include "zcommon.acs"
+
+script "Nest_Hurt" (void) {
+  Radius_Quake(7, 75, 0, 128, 2501);
+  Thing_Damage(41, 1, 0);
+}

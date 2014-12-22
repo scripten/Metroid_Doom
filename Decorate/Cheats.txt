@@ -1,0 +1,9 @@
+ACTOR M_SuperShotgun : SuperShotgun replaces SuperShotgun {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_Shotgun : Shotgun replaces Shotgun {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_RocketLauncher : RocketLauncher replaces RocketLauncher {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_PlasmaRifle : PlasmaRifle replaces PlasmaRifle {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_Pistol : Pistol replaces Pistol {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_Chainsaw : Chainsaw replaces Chainsaw {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_Fist : Fist replaces Fist {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_Chaingun : Chaingun replaces Chaingun {+WEAPON.CHEATNOTWEAPON}
+ACTOR M_BFG9000 : BFG9000 replaces BFG9000 {+WEAPON.CHEATNOTWEAPON}

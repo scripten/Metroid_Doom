@@ -1,0 +1,364 @@
+//////////////////////
+// SNOW SPAWNERS    //
+// by Tormentor667  //
+// improved by Ceeb //
+//////////////////////
+
+ACTOR SnowParticle
+{
+	Radius 1
+	Height 1
+	Damage 0
+	Projectile
+	RenderStyle Translucent
+	Alpha 0
+	Scale 0.1
+	+MISSILE 
+	+NOBLOCKMAP
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_SetScale(frandom(0.01, 0.1))
+		ICPT AAAAAAA 2 A_FadeIn(0.1)
+		ICPT A 3
+		goto Spawn+9
+		Death:
+		ICPT A 1 A_FadeOut(0.05)
+		Loop
+	}
+}
+
+ACTOR SnowSpawner 31000
+{
+	Radius 1
+	Height 1
+	+NOBLOCKMAP
+	+NOGRAVITY
+	+NOSECTOR
+	+NOINTERACTION
+	+NOCLIP
+	-SOLID
+	+CLIENTSIDEONLY
+	+SPAWNCEILING
+
+	States
+	{
+	Spawn:
+		TNT1 A 0
+		TNT1 A 0 A_CheckSight("Unsighted")
+		TNT1 A 0 A_JumpIf(Args[2] > 0, "Circle")
+		TNT1 A 8 A_SpawnItemEx ("SnowParticle", Random(-Args[0], -Args[0]), Random(-Args[0], -Args[0]), 0, frandom(-1.0, 1.0), frandom(-1.0, 1.0), frandom(-1.0, -3.0), 0, 128, Args[1])
+    TNT1 A 8 A_SpawnItemEx ("SnowParticle", Random(-Args[0], -Args[0]), Random(-Args[0], -Args[0]), 0, frandom(-1.0, 1.0), frandom(-1.0, 1.0), frandom(-1.0, -3.0), 0, 128, Args[1])
+    TNT1 A 2 A_SpawnItemEx ("IceParticle", Random(-Args[0], -Args[0]), Random(-Args[0], -Args[0]), 0, frandom(-1.0, 1.0), frandom(-1.0, 1.0), frandom(-1.0, -3.0), 0, 128, Args[1])
+		Loop
+	Circle:
+		TNT1 A 8 A_SpawnItemEx ("SnowParticle", Random(-Args[0], -Args[0]), 0, 0, frandom(-1.0, 1.0), frandom(-1.0, 1.0), frandom(-1.0, -3.0), Random(0, 360), 128, Args[1])
+		Loop
+	Unsighted:
+		TNT1 A 1
+		Goto Spawn
+	}
+}
+
+ACTOR SteamSpawner : SwitchableDecoration 31001 //DoomEdNum Here
+{
+  Height 2
+  Radius 1
+  Mass 0
+  +NoBlockMap
+  +NoGravity
+  +NoInteraction
+  +ClientSideOnly
+  States
+  {
+  Spawn:
+  Active:
+    TNT1 A 0
+    TNT1 A 0 A_JumpIf(Args[0] == 1, "Down")
+    TNT1 A 0 A_JumpIf(Args[0] > 1, "Forward")
+    TNT1 A 0 A_JumpIf(Args[1] > 0, "UpBurst")
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 A 1 A_SpawnItemEx("SteamParticle", 0, 0, 1, (0.1)*Random(0, 4), 0, (0.1)*Random(35, 40), Random(0, 360), 128)
+    Loop
+  Down:
+    TNT1 A 0 A_JumpIf(Args[1] > 0, "DownBurst")
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 A 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(0, 4), 0, (-0.1)*Random(35, 40), Random(0, 360), 128)
+    Loop
+  Forward:
+    TNT1 A 0 A_JumpIf(Args[1] > 0, "ForwardBurst")
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 A 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(35, 40), 0, (0.1)*Random(-5, 5), Random(-8, 8), 128)
+    Loop
+  UpBurst:
+    TNT1 A 1 A_Jump(Args[2]/16, 1)
+    Loop
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 1, (0.1)*Random(0, 4), 0, (0.1)*Random(35, 40), Random(0, 360), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 1, (0.1)*Random(0, 4), 0, (0.1)*Random(35, 40), Random(0, 360), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 1, (0.1)*Random(0, 4), 0, (0.1)*Random(35, 40), Random(0, 360), 128)
+    Loop
+  DownBurst:
+    TNT1 A 1 A_Jump(Args[2]/16, 1)
+    Loop
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(0, 4), 0, (-0.1)*Random(35, 40), Random(0, 360), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(0, 4), 0, (-0.1)*Random(35, 40), Random(0, 360), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(0, 4), 0, (-0.1)*Random(35, 40), Random(0, 360), 128)
+    Loop
+  ForwardBurst:
+    TNT1 A 1 A_Jump(Args[2]/16, 1)
+    Loop
+    TNT1 A 0 A_JumpIf(Args[3] > 0, 2)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(35, 40), 0, (0.1)*Random(-5, 5), Random(-8, 8), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(35, 40), 0, (0.1)*Random(-5, 5), Random(-8, 8), 128)
+    TNT1 AAAAAAAAAA 1 A_SpawnItemEx("SteamParticle", 0, 0, 0, (0.1)*Random(35, 40), 0, (0.1)*Random(-5, 5), Random(-8, 8), 128)
+    Loop
+  Inactive:
+    TNT1 A 1
+    Goto Inactive+1
+  }
+}
+
+ACTOR SteamParticle
+{
+  Height 1
+  Radius 1
+  +Missile
+  +NoGravity
+  +NoBlockMap
+  RenderStyle Add
+  Scale 0.4
+  Alpha 0.65
+  States
+  {
+  Spawn:
+    STEM A 2 A_SetTranslucent(0.6, 1)
+    STEM B 2 A_SetTranslucent(0.55, 1)
+    STEM C 2 A_SetTranslucent(0.5, 1)
+    STEM D 2 A_SetTranslucent(0.45, 1)
+    STEM E 2 A_SetTranslucent(0.4, 1)
+    STEM F 2 A_SetTranslucent(0.35, 1)
+    STEM G 2 A_SetTranslucent(0.3, 1)
+    STEM H 2 A_SetTranslucent(0.25, 1)
+    STEM I 2 A_SetTranslucent(0.2, 1)
+    STEM J 2 A_SetTranslucent(0.15, 1)
+    STEM K 2 A_SetTranslucent(0.1, 1)
+    STEM L 2 A_SetTranslucent(0.05, 1)
+    Stop
+  }
+}
+
+ACTOR AshSpawner 31002
+{
+  Radius 1
+  Height 1
+  +NoClip
+  +NoGravity
+  +ClientSideOnly
+  States
+  {
+  Spawn:
+  Active:
+    TNT1 A 0
+    TNT1 A 0 A_Jump(256, 1, 2, 3, 4)
+    TNT1 A 5 A_SpawnItemEx("FloatingAshLight", Random(-Args[0],Args[0]), Random(-Args[0],Args[0]), Random(0,Args[1]), Random(Args[2],Args[3]), 0, Random(-Args[2],Args[2]), Random(-4, 4), 128, Args[4])
+    Loop
+    TNT1 A 5 A_SpawnItemEx("FloatingAshGrey", Random(-Args[0],Args[0]), Random(-Args[0],Args[0]), Random(0,Args[1]), Random(Args[2],Args[3]), 0, Random(-Args[2],Args[2]), Random(-4, 4), 128, Args[4])
+    Loop
+    TNT1 A 5 A_SpawnItemEx("FloatingAshDarkGrey", Random(-Args[0],Args[0]), Random(-Args[0],Args[0]), Random(0,Args[1]), Random(Args[2],Args[3]), 0, Random(-Args[2],Args[2]), Random(-4, 4), 128, Args[4])
+    Loop
+    TNT1 A 5 A_SpawnItemEx("FloatingAshDark", Random(-Args[0],Args[0]), Random(-Args[0],Args[0]), Random(0,Args[1]), Random(Args[2],Args[3]), 0, Random(-Args[2],Args[2]), Random(-4, 4), 128, Args[4])
+    Loop
+  Inactive:
+    TNT1 A 1
+    Loop
+  }
+}
+
+ACTOR FloatingAshLight
+{
+  +Missile
+  +NoBlockmap
+  +NoGravity
+  Radius 1
+  Height 1
+  RenderStyle Shaded
+  StencilColor "A0 A0 A0"
+  Scale 0.15
+  ReactionTime 250
+  States
+  {
+  Spawn:
+    ASHX A 0
+    ASHX A 0 A_SetScale(FRandom(0.09, 0.12))
+    ASHX A 0 A_Jump(128, "Spawn2")
+  Spawn1:
+    ASHX ABCDEFGH 2 A_CountDown
+    Loop
+  Spawn2:
+    ASHX HGFEDCBA 2 A_CountDown
+    Loop
+  Death:
+    ASHX F 2 A_FadeOut(0.06)
+    Loop
+  }
+}
+
+ACTOR FloatingAshGrey : FloatingAshLight { StencilColor "80 80 80" }
+ACTOR FloatingAshDarkGrey : FloatingAshLight { StencilColor "60 60 60" }
+ACTOR FloatingAshDark : FloatingAshLight { StencilColor "45 45 45" }
+
+ACTOR RainSpawner 31003
+{
+  Radius 1
+  Height 1
+  +NoClip
+  +ClientSideOnly
+  +SpawnCeiling
+  +NoGravity
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 0 A_JumpIf(Args[2] > 0, "NoSound")
+    TNT1 A 0 A_JumpIf(Args[3] > 0, "Circle")
+    TNT1 A 0 A_PlaySoundEx("Ambient/Rain", "SoundSlot7", 1)
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), Random(-Args[0], Args[0]), -2, 0, 0, 0, 0, 128, Args[1])
+    Loop
+  Circle:
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), 0, -2, 0, 0, 0, Random(0, 360), 128, Args[1])
+  NoSound:
+    TNT1 A 0 A_Jumpif(Args[3] > 0, "NoSoundCircle")
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), Random(-Args[0], Args[0]), -2, 0, 0, 0, 0, 128, Args[1])
+    Loop
+  NoSoundCircle:
+    TNT1 A 2 A_SpawnItemEx("RainDrop", Random(-Args[0], Args[0]), 0, -2, 0, 0, 0, Random(0, 360), 128, Args[1])
+    Loop
+  }
+}
+
+ACTOR RainDrop
+{
+  +Missile
+  +NoBlockMap
+  -NoGravity
+  Height 2
+  Radius 2
+  Renderstyle Translucent
+  Alpha 0.6
+  Scale 0.2
+  States
+  {
+  Spawn:
+    RNDR A 1 A_JumpIf(WaterLevel > 0, "Death")
+    Loop
+  Death:
+    RNDR BCDEFGH 3 A_FadeOut(0.15)
+    Stop
+  }
+}
+
+ACTOR Bubble
+{
+  Radius 2
+  Height 2
+  Speed 1
+  Scale 0.05
+  Alpha 0.25
+  RenderStyle Add
+  projectile
+  +CLIENTSIDEONLY
+  +FORCEXYBILLBOARD
+  +NOCLIP
+  States
+  {
+  Spawn:
+    SBUB A 1
+    //fall through
+  Rise:
+    SBUB A 0 A_JumpIf(random(1, 5) == 1, "Death")
+    SBUB A 1 A_Jump (32, "Jiggle")
+    loop
+  Jiggle:
+    SBUB A 0 A_JumpIf(random(1, 5) == 1, "Death")
+    SBUB A 1 A_SetAngle (random (0, 360)) 
+    SBUB A 0 A_Recoil (0.1)
+    goto Rise
+  Death:
+    TNT1 A 1
+    stop
+  }
+}
+
+ACTOR BubbleSpawner 31004
+{
+  Radius 2
+  Height 2
+  +NOINTERACTION
+  States
+  {
+  Spawn:
+    TNT1 A 0
+    TNT1 A 2 A_SpawnItemEx ("Bubble", random (-16, 16), 0, 0, 0, 0, 2, random (0, 360), 0, 128)
+    Loop
+  }
+}
+
+ACTOR ChargingStationEnergy 31005
+{
+  Radius 24
+  Height 64
+  Scale 0.6
+  +Solid
+  States
+  {
+  Spawn:
+    STNE ABCB 8
+    Loop
+  }
+}
+
+ACTOR ChargingStationMissile 31006
+{
+  Radius 24
+  Height 64
+  Scale 0.6
+  +Solid
+  States
+  {
+  Spawn:
+    STNM ABCB 8
+    Loop
+  }
+}
+
+ACTOR MissileDoor 31007
+{
+  MONSTER
+  +NOINTERACTION
+  Health 6
+  States
+  {
+  Spawn:
+    TNT1 A 1
+    Loop
+  Death:
+    TNT1 A -1
+    Stop
+  }
+}
+
+ACTOR SuperMissileDoor 31008
+{
+  Health 2
+  MONSTER
+  +NOINTERACTION
+  States
+  {
+  Spawn:
+    TNT1 A 1
+    Loop
+  }
+}

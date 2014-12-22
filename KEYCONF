@@ -1,0 +1,12 @@
+addkeysection "Metroid" M_Keysection
+   addmenukey "Morph Ball" M_Ball
+   alias M_Ball "pukename MorphBall"
+   defaultbind X M_Ball
+
+   addmenukey "Speed Booster" M_Boost
+   alias M_Boost "pukename Speedboost"
+   defaultbind Z M_Boost
+
+   addmenukey "X-Ray Scanner" M_Scan
+   alias M_Scan "pukename XrayScanner"
+   defaultbind C M_Scan

@@ -1,0 +1,19 @@
+Model Gunship
+{
+	Path "3dModels"
+	Model 0 "gunshipmdl.md3"
+	Skin 0 "gunshipmdl.png"
+        Scale 4 4 4
+
+	FrameIndex GUNP A 0 0
+}
+
+Model Chozo_Statue
+{
+	Path "3dModels"
+	Model 0 "chozo.md3"
+	Skin 0 "chozo.png"
+        Scale 2 2 2
+
+	FrameIndex CHST A 0 0
+}

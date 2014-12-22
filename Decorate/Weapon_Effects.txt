@@ -1,0 +1,129 @@
+ACTOR Trail
+{
+  Renderstyle Translucent
+  Alpha 0.5
+  +NOGRAVITY
+}
+
+ACTOR PowerTrail : Trail
+{
+  Scale 0.5
+  states
+  {
+  Spawn:
+    PBST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+
+ACTOR ChargeTrail : Trail
+{
+  Scale 0.5
+  states
+  {
+  Spawn:
+    CBST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+ACTOR ChargeTrail1 : ChargeTrail {Scale 1}
+ACTOR ChargeTrail2 : ChargeTrail {Scale 1.5}
+Actor ChargeTrail3 : Trail
+{
+  Scale 2
+  states
+  {
+  Spawn:
+    CBST ABCDABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+
+Actor IceTrail : Trail
+{
+  Scale 0.5
+  States
+  {
+  Spawn:
+    ICST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+Actor IceTrail1 : IceTrail {Scale 1}
+Actor IceTrail2 : IceTrail {Scale 1.5}
+Actor IceTrail3 : IceTrail {Scale 2}
+
+Actor WaveTrail : Trail
+{
+  Scale 0.5
+  States
+  {
+  Spawn:
+    WVST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+Actor WaveTrail1 : WaveTrail {Scale 1}
+Actor WaveTrail2 : WaveTrail {Scale 1.5}
+Actor WaveTrail3 : WaveTrail {Scale 2}
+
+Actor PlasmaTrail : Trail
+{
+  Scale 0.3
+  States
+  {
+  Spawn:
+	   PLST ABCD 1 BRIGHT A_FadeOut(0.1)
+    loop
+  }
+}
+Actor PlasmaTrail1 : PlasmaTrail {Scale 0.6}
+Actor PlasmaTrail2 : PlasmaTrail {Scale 0.9}
+Actor PlasmaTrail3 : PlasmaTrail {Scale 1.2}
+
+// PARTICLES
+
+ACTOR IceParticle
+{
+  Gravity 0.6
+  Scale 0.1
+  Renderstyle Translucent
+  Alpha 0.8
+  +NOCLIP
+  States
+  {
+  Spawn:
+    TNT1 A 0 A_ChangeVelocity(0, random(-2.0, 2.0), 0, CVF_RELATIVE | CVF_REPLACE)
+    ICPT A 3 BRIGHT A_FadeOut(0.02)
+    loop
+  }
+}
+
+ACTOR WaveParticle
+{
+  Scale 0.5
+  Speed 1
+  Renderstyle Translucent
+  Alpha 0.8
+  States
+  {
+  Spawn:
+    TNT1 A 0 A_ChangeVelocity(random(-2.0, 2.0), random(-2.0, 2.0), random(-2.0, 0), CVF_RELATIVE | CVF_REPLACE)
+    WVPT ABC 1 BRIGHT A_FadeOut(0.03)
+    loop
+  }
+}
+
+ACTOR PlasmaParticle
+{
+  Scale 0.05
+  +NOGRAVITY
+  States
+  {
+  Spawn:
+    TNT1 A 0 A_FadeOut(1)
+    TNT1 A 0 A_ChangeVelocity(random(-0.5, 0.5), random(-0.5, 0.5), random(1.0, 1.5), CVF_RELATIVE | CVF_REPLACE)
+    PLPT ABCDE 3 Bright
+    loop
+  }
+}

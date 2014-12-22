@@ -1,0 +1,88 @@
+ACTOR Nest : MonsterBase 10050
+{
+  +NOGRAVITY
+  +SPAWNCEILING
+  +BOSS
+  +RANDOMIZE
+  +NOICEDEATH
+  Height 64
+  Radius 16
+  Mass 0x7FFFFFFF
+  Health 3
+  DamageFactor "Beam", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    NEST ABCD 5 A_JumpIfHealthLower(3, "Hurt1")
+    Loop
+  Hurt1:
+    NEST EFGH 5 A_JumpIfHealthLower(2, "Hurt2")
+    Loop
+  Hurt2:
+    NEST IJK 4
+    Loop
+  Death:
+    NEST A 0 A_Gravity
+    NEST LMNOPQ 16 A_Scream
+    NEST A 0 A_NoBlocking
+    NEST A 0 A_SpawnDebris("Chunk")
+    NEST Q -1
+    Stop
+  }
+}
+
+ACTOR NestNode : MonsterBase 10051
+{
+  Height 48
+  Radius 16
+  Mass 0x7FFFFFFF
+  Health 1
+  DamageFactor "Beam", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    NSTN AB 2
+    Loop
+  Death:
+    NSTN A 1 A_Scream
+    NSTN CDEFGHIJ 8
+    NSTN A 0 ACS_NamedExecuteWithResult("Nest_Hurt", 0)
+    NSTN J -1
+    Stop
+  }
+}
+
+ACTOR NestSpawner : MonsterBase 10052
+{
+  Height 0
+  Radius 0
+  Mass 0x7FFFFFFF
+  Health 3
+  DamageFactor "Beam", 0.0
+  DamageFactor "Missile", 0.0
+  DamageFactor "NoPlayerDamage", 0.0
+  DamageFactor "NoMonsterDamage", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    TNT1 A 2 A_Look
+    Loop
+  See:
+    TNT1 A 2 A_JumpIf(random(0, 10) == 10, "Puke")
+    Loop
+  Puke:
+    TNT1 A 0 A_SpawnItemEx("Mellow", random(-300, 300), random(-300, 300), random(-300, 300))
+    Goto See
+  Death:
+    TNT1 AAAAA 0 A_SpawnItemEx("PickupSpawnerEnergy", random(-300, 300), random(-300, 300), random(-300, 300))
+    Stop
+  }
+}

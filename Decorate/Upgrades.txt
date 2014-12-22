@@ -1,0 +1,371 @@
+// INVENTORY ITEMS FOR ACS SCRIPTS
+
+ACTOR BaseInv : Inventory
+{
+  Inventory.MaxAmount 1
+  Inventory.InterHubAmount 1
+  Inventory.pickupmessage ""
+}
+
+ACTOR XrayScanner : BaseInv {}
+ACTOR SpaceJump : BaseInv {}
+ACTOR MorphBall : BaseInv {}
+ACTOR SpeedBooster : BaseInv {}
+ACTOR ScrewAttack : BaseInv {}
+
+//POWERUPS
+
+ACTOR HiJumpBoots_Powerup : PowerHighJump
+{
+  powerup.duration 0x7FFFFFFF
+  +INVENTORY.PERSISTENTPOWER
+  +INVENTORY.UNDROPPABLE
+  +INVENTORY.UNTOSSABLE
+  states
+  {
+  Spawn:
+    MEGA ABCD 4
+    loop
+  }
+}
+
+ACTOR VariaSuit_Powerup : PowerProtection
+{
+  powerup.duration 0x7FFFFFFF
+  DamageFactor "Normal", 0.75
+  DamageFactor "NoMonsterDamage", 0.75
+  DamageFactor "Heat", 0.0
+  +INVENTORY.PERSISTENTPOWER
+  +INVENTORY.UNDROPPABLE
+  +INVENTORY.UNTOSSABLE
+  states
+  {
+  Spawn:
+    MEGA ABCD 4
+    loop
+  }
+}
+
+ACTOR GravitySuit_Powerup : PowerProtection
+{
+  powerup.duration 0x7FFFFFFF
+  DamageFactor "Normal", 0.75
+  DamageFactor "NoMonsterDamage", 0.75
+  DamageFactor "Lava", 0.0
+  + INVENTORY.PERSISTENTPOWER
+  + INVENTORY.UNDROPPABLE
+  + INVENTORY.UNTOSSABLE
+  states
+  {
+  Spawn:
+    MEGA ABCD 4
+    loop
+  }
+}
+
+// POWERUP GIVERS
+
+ACTOR BasePG : PowerupGiver
+{
+  Inventory.MaxAmount 0
+  Inventory.PickupSound ""
+  Inventory.PickupMessage ""
+  + AUTOACTIVATE
+  states
+  {
+  Spawn:
+    MEGA ABCD 4
+    loop
+  }
+}
+
+ACTOR HiJumpBootsPG : BasePG
+{
+  powerup.type "HiJumpBoots_Powerup"
+  states
+  {
+  Spawn:
+    JMBT AB 4
+    loop
+  }
+}
+
+ACTOR VariaSuitPG : BasePG
+{
+  powerup.type "VariaSuit_Powerup"
+  states
+  {
+  Spawn:
+    VRST AB 4
+    loop
+  }
+}
+
+ACTOR GravitySuitPG : BasePG
+{
+  powerup.type "GravitySuit_Powerup"
+  states
+  {
+  Spawn:
+    GRST AB 4
+    loop
+  }
+}
+
+// CUSTOMINVENTORY PICKUPS
+
+ACTOR InventoryBase : CustomInventory
+{
+  Inventory.PickupMessage ""
+  Inventory.PickupSound ""
+  Inventory.MaxAmount 0
+  Inventory.InterHubAmount 0
+}
+
+ACTOR MorphBallGiver : InventoryBase 10004
+{
+  states
+  {
+  Spawn:
+    MHBL AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 1)
+	   TNT1 A 0 A_GiveInventory("MorphBall", 1)
+	   Stop
+  }
+}
+
+ACTOR HiJumpBootsGiver : InventoryBase 10005
+{
+  states
+  {
+  Spawn:
+    JMBT AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 3)
+	   TNT1 A 0 A_GiveInventory("HiJumpBootsPG", 1)
+	   Stop
+  }
+}
+
+ACTOR SpeedBoosterGiver : InventoryBase 10006
+{
+  states
+  {
+  Spawn:
+    SBST AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 2)
+	   TNT1 A 0 A_GiveInventory("SpeedBooster", 1)
+	   Stop
+  }
+}
+
+ACTOR VariaSuitGiver : InventoryBase 10007
+{
+  states
+  {
+  Spawn:
+    VRST AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 5)
+    TNT1 A 1 ACS_NamedExecuteWithResult("CheckSuit", 0)
+	   TNT1 A 0 A_GiveInventory("VariaSuitPG", 1)
+	   Stop
+  }
+}
+
+ACTOR GravitySuitGiver : InventoryBase 10008
+{
+  states
+  {
+  Spawn:
+    GRST AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 6)
+    TNT1 A 0 ACS_NamedExecuteWithResult("CheckSuit", 0)
+	   TNT1 A 0 A_GiveInventory("GravitySuitPG", 1)
+	   Stop
+  }
+}
+
+ACTOR SpaceJumpGiver : InventoryBase 10009
+{
+  states
+  {
+  Spawn:
+    SPJM AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 4)
+	   TNT1 A 0 A_GiveInventory("SpaceJump", 1)
+	   Stop
+  }
+}
+
+ACTOR ScrewAttackGiver : InventoryBase 10010
+{
+  states
+  {
+  Spawn:
+    SCAT AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 7)
+	   TNT1 A 0 A_GiveInventory("ScrewAttack", 1)
+	   Stop
+  }
+}
+
+ACTOR XrayScannerGiver : InventoryBase 10016
+{
+  states
+  {
+  Spawn:
+    XRSC AB 4
+    Loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 14)
+	   TNT1 A 0 A_GiveInventory("XrayScanner", 1)
+	   Stop
+  }
+}
+
+// WEAPON GIVERS
+
+ACTOR ChargeBeamGiver : InventoryBase 10011
+{
+  states
+  {
+  Spawn:
+    CHBM AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 10)
+	   TNT1 A 0 A_GiveInventory("ChargeBeam", 1)
+	   Stop
+  }
+}
+
+ACTOR IceBeamGiver : InventoryBase 10012
+{
+  states
+  {
+  Spawn:
+    ICBM AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 11)
+   	TNT1 A 0 A_GiveInventory("IceBeam", 1)
+	   Stop
+  }
+}
+
+ACTOR WaveBeamGiver : InventoryBase 10013
+{
+  states
+  {
+  Spawn:
+    WVBM AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 12)
+	   TNT1 A 0 A_GiveInventory("WaveBeam", 1)
+	   Stop
+  }
+}
+
+ACTOR PlasmaBeamGiver : InventoryBase 10014
+{
+  states
+  {
+  Spawn:
+    PLBM AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("ItemPickup", 13)
+	   TNT1 A 0 A_GiveInventory("PlasmaBeam", 1)
+	   Stop
+  }
+}
+
+ACTOR MissileLauncherGiver : InventoryBase 10015
+{
+  Inventory.PickupSound "GETTANK"
+  states
+  {
+  Spawn:
+    SMTK AB 4
+    loop
+  Pickup:
+    TNT1 A 1 ACS_NamedExecuteWithResult("GiveSuperMissileUp")
+    TNT1 A 0 A_GiveInventory("MissileLauncher", 1)
+    TNT1 A 0 ACS_NamedExecuteWithResult("CheckSuit")
+	   Stop
+  }
+}
+
+// TANK PICKUPS
+
+// Gives the player room for five more missiles
+ACTOR MissileUpgrade : InventoryBase 10001
+{
+  inventory.pickupmessage "Missile Upgrade"
+  Inventory.PickupSound "GETTANK"
+  inventory.icon "MTNKA0"
+  states
+  {
+  Spawn:
+    MTNK AB 4
+    loop
+  Pickup:
+    TNT1 A 0 ACS_NamedExecuteWithResult("GiveMissileUp", 0)
+    stop
+  }
+}
+
+ACTOR SuperMissileUpgrade : InventoryBase 10002
+{
+  inventory.pickupmessage "Super Missile Upgrade"
+  Inventory.PickupSound "GETTANK"
+  inventory.icon "SMTKA0"
+  states
+  {
+  Spawn:
+    SMTK AB 4
+    loop
+  Pickup:
+    TNT1 A 0 ACS_NamedExecuteWithResult("GiveSuperMissileUp", 0)
+    stop
+  }
+}
+
+ACTOR EnergyTank : InventoryBase 10003
+{
+  inventory.pickupmessage "Energy Tank"
+  Inventory.PickupSound "GETTANK"
+  inventory.icon "ENTKA0"
+  states
+  {
+  Spawn:
+    ENTK AB 4
+    loop
+  Pickup:
+    TNT1 A 0 ACS_NamedExecuteWithResult("GiveEnergyTank", 0)
+    stop
+  }
+}
+
+// Dummy object for counting total energy tanks in inventory
+ACTOR ETank : Inventory
+{
+  Inventory.MaxAmount 14
+  Inventory.InterHubAmount 14
+}
+
+ACTOR ETankBar : ETank {}

@@ -1,0 +1,100 @@
+ACTOR Mella : MonsterBase
+{
+  +JUMPDOWN
+  +SPAWNFLOAT
+  +FLOATBOB
+  +NOGRAVITY
+  +LOOKALLAROUND
+  +FORCEXYBILLBOARD
+  Health 10
+  Height 12
+  Radius 8
+  Speed 8
+  Scale 0.8
+  ActiveSound "HEATSIZZ"
+  Obituary "%o couldn't take the heat from a Mella."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    MELL ABCDEFGHABCDEFGH 3 A_LoopActiveSound
+	   MELL A 0 A_Look
+    Loop
+  See:
+    MELL ABCDEFGHABCDEFGH 3 A_Wander
+    MELL A 0 A_JumpIf(random(0, 9) == 9, "DropFire")
+    MELL A 0 A_JumpIfCloser(256, "Attack")
+	   loop
+  Attack:
+    MELL A 0 A_ChangeFlag("FLOAT", True)
+	   MELL ABCDEFGH 1 A_Chase
+	   MELL A 0 A_JumpIfCloser(72, "Asplode")
+	   loop
+  DropFire:
+    MELL A 0 A_SpawnItemEx("MellaFire", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    Goto See
+  Pain:
+    MELL A 2 Thing_SetTranslation(0, 7)
+    MELL A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+	   MELL A 0 A_StopSound
+    MELL ABCD 1 A_Scream
+    MELL A 0 A_NoBlocking
+    MELL A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    MELL A 0 A_SpawnDebris("Chunk")
+    Stop
+	 Asplode:
+	   MELL A 0 A_StopSound
+	   MELL ABCD 1 A_Scream
+	   MELL A 0 A_CustomMeleeAttack((20))
+	   MELL A 0 A_NoBlocking
+	   MELL A 0 A_SpawnDebris("Chunk")
+	   Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("MellaIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+	   TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR MellaIce : IceBase
+{
+  Height 12
+  Radius 8
+  Scale 0.8
+  States
+  {
+  Spawn:
+	  BUZZ A 500
+	  BUZZ A 1 A_Jump(256, "Death")
+	  Loop
+	 Death:
+	  BUZZ A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+	  BUZZ A 0 A_FreezeDeathChunks
+	  Stop
+  }
+}
+
+ACTOR MellaFire
+{
+  Health 0x7FFFFFFF
+  radius 4
+  height 1
+  scale 0.1
+  +THRUACTORS
+  Obituary "%o got too close to Mella droppings."
+  SeeSound "vile/firestrt"
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    RDFL A 0 A_JumpIf(random(0, 3) == 3, "Death")
+    RDFL A 0 A_Stop
+    RDFL ABCD 8 A_Explode(10, 16, False, False, True)
+    Loop
+  Death:
+    RDFL ABCDA 8 A_FadeOut(0.2)
+    Stop
+  }
+}

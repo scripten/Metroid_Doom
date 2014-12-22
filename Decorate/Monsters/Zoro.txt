@@ -1,0 +1,50 @@
+ACTOR Zoro : MonsterBase
+{
+  Health 60
+  Height 32
+  Radius 24
+  Speed 6
+  Obituary "%o ran into a Zoro."
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    ZORO A 1 A_Look
+    Loop
+  See:
+    ZORO ABCDEF 10 A_Wander
+    ZORO A 0 A_CustomMeleeAttack((8))
+    loop
+  Pain:
+    ZORO A 2 Thing_SetTranslation(0, 7)
+    ZORO A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    ZORO B 1 A_Scream
+    ZORO B 0 A_NoBlocking
+    ZORO B 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ZORO B 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("ZoroIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR ZoroIce : IceBase
+{
+  Height 48
+  Radius 16
+  States
+  {
+  Spawn:
+    ZORO A 500
+    ZORO A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    ZORO A 0 A_SpawnItemEx("PickupSpawnerEnergy", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    ZORO A 0 A_FreezeDeathChunks
+    Stop
+  }
+}

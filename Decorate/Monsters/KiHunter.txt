@@ -1,0 +1,118 @@
+ACTOR KiHunter : MonsterBase
+{
+  +SPAWNFLOAT
+  +FLOATBOB
+  +FLOAT
+  +NOGRAVITY
+  Health 120
+  Height 48
+  Radius 16
+  Speed 8
+  Scale 0.6
+  ActiveSound "WASPBZZ"
+  Obituary "%o was preyed upon by a Ki Hunter."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Electric", 0.0
+  DamageFactor "Plasma", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    KIHU ABABA 3 A_LoopActiveSound
+    KIHU A 0 A_Look
+    Loop
+  See:
+    KIHU ABABA 3 A_Chase
+    Loop
+  Missile:
+    KIHU ABABA 3
+    KIHU ABABA 3 A_FaceTarget
+    KIHU A 0 A_JumpIf(random(0,2) == 2, "Spit")
+    KIHU A 1 A_CustomMissile("KiShot", 2)
+    Goto See
+  Spit:
+    KIHU A 0 A_PlaySound("RDLBITE1")
+    KIHU A 1 A_CustomMissile("KiSpit", 32, 0, random(300, 320), 0, 15)
+    KIHU A 1 A_CustomMissile("KiSpit", 32, 0, 15)
+    KIHU A 1 A_CustomMissile("KiSpit", 32, 0, random(30, 60), 0, 15)
+    Goto See
+  Pain:
+    KIHU A 1 Thing_SetTranslation(0, 7)
+    KIHU B 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    KIHU B 1 A_StopSound
+    KIHU A 1 A_Scream
+    KIHU A 0 A_NoBlocking
+    KIHU A 0 A_SpawnItemEx("PickupSpawner", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    KIHU A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("KiHunterIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR KiHunterIce : IceBase
+{
+  Height 48
+  Radius 16
+  Scale 0.6
+  States
+  {
+  Spawn:
+    KIHU A 500
+    KIHU A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    KIHU A 0 A_SpawnItemEx("PickupSpawner", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    KIHU A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
+
+ACTOR KiShot
+{
+  height 2
+  radius 2
+  damage (15)
+  speed 14
+  Scale 0.4
+  PROJECTILE
+  +RANDOMIZE
+  +ROCKETTRAIL
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    CNK3 A 1
+    loop
+  Death:
+    CNK3 A 1
+    stop
+  }
+}
+
+ACTOR KiSpit
+{
+  height 2
+  radius 2
+  damage (20)
+  speed 15
+  Scale 0.6
+  Gravity 0.05
+  PROJECTILE
+  +RANDOMIZE
+  -NOGRAVITY
+  DamageType "NoMonsterDamage"
+  states
+  {
+  Spawn:
+    KISP A 1
+    loop
+  Death:
+    KISP A 1
+    stop
+  }
+}

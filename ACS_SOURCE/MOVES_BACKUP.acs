@@ -1,0 +1,196 @@
+#library "Moves"
+#include "zcommon.acs"
+
+bool isNotBall = true;
+
+// Allows player to switch between morph ball mode and normal mode
+script "MorphBall" (void)
+{
+  int curHealth = GetActorProperty(0, APROP_Health);
+  int maxHealth = GetActorProperty(0, APROP_SpawnHealth);
+  if(isNotBall && CheckInventory("BoostMarker") == 0 && CheckInventory("Pause") == 0 && CheckInventory("MorphBall")) {
+    StopSound(0, 5);
+    MorphActor(0, "BallPlayer", "", 0x7FFFFFFF, 1154, "null", "null");
+    for(int i = 0; i < 1000; i++) {
+      Sector_SetFriction(i, 150);
+    }
+    isNotBall = false;
+  }
+  else {
+    UnMorphActor(0);
+    for(int j = 0; j < 1000; j++) {
+      Sector_SetFriction(j, 100);
+    }
+    isNotBall = true;
+  }
+  SetActorProperty(0, APROP_Health, curHealth);
+  SetActorProperty(0, APROP_SpawnHealth, maxHealth);
+  ACS_NamedExecute("CheckSuit", 0);
+}
+
+//Double (and now Space) Jump by Agent ME with modifications by Scripten
+script "DoubleJump" enter
+{
+  int maxDblJumps = 1;
+  int dblJumpThrust = 50;
+  int hasDoubleJumped = 0;
+  while(true) {
+    if (CheckInventory("SpaceJump") == 1) {
+      maxDblJumps = 5;
+    }
+    if ((GetActorZ(0) - GetActorFloorZ(0)) > 0.0 && CheckInventory("ShineMarker") != 1) {
+      while (GetPlayerInput(0, INPUT_BUTTONS) & BT_JUMP && hasDoubleJumped < maxDblJumps) {
+        Delay(1);
+      }
+      while ((GetActorZ(0) - GetActorFloorZ(0)) > 0) {
+        if (GetPlayerInput(0, INPUT_BUTTONS) & BT_JUMP && hasDoubleJumped < maxDblJumps) {
+		        if(hasDoubleJumped < 1) {
+		          hasDoubleJumped++;
+		         	SpawnProjectile(0, "WallChecker", ((GetActorAngle(0) >> 8) + 128) % 255, 70, 0, 0, 0);
+	         		int x = GetActorVelX(0);
+	         		int y = GetActorVelY(0);
+	         		if(x < 0)
+         			  x = -x;
+			         if(y < 0)
+              y = -y;
+            if(CheckInventory("GravitySuit_Powerup") == 1 || CheckInventory("WaterMarker") == 0) {
+			           if(CheckInventory("WallJumpMarker") == 1 && (x > 10000 || y > 10000)){
+			             PlaySound(0, "WALLJUMP", 5);
+			             ThrustThing(GetActorAngle(0) >> 8, 20, 0, 0);
+			             hasDoubleJumped = 0;
+			             TakeInventory("WallJumpMarker", 1);
+		  	         }
+              else
+			             PlaySound(0, "DBLJUMP", 5);
+            }
+            else
+			           PlaySound(0, "DBLJUMP", 5);
+		        }
+          else {
+		          if(CheckInventory("ScrewAttack")) {
+              SpawnProjectile(0, "ScrewBoom", GetActorAngle(0), 70, 0, 0, 0);
+			           Spawn("SpinSparkler", GetActorX(0), GetActorY(0), GetActorZ(0));
+			           PlaySound(0, "BOOSTER", 6, 0.7);
+			           PlaySound(0, "SPIN", 7);
+	       		  }
+		          PlaySound(0, "SPIN", 5);
+			         hasDoubleJumped++;
+		        }
+          ThrustThingZ(0, dblJumpThrust, 0, 0);
+          Delay(10);
+        }
+        Delay(1);
+      }
+    }
+    hasDoubleJumped = 0;
+    Delay(1);
+  }
+}
+
+// Speedboost shoots player forward and destroys enemies in path after a short forward run
+script "Speedboost" (void)
+{
+  if(CheckInventory("SpeedBooster") != 1 || isNotBall == False)
+    terminate;
+  int lastx = 100000000;
+  int lasty = 100000000;
+  for(int count = CheckInventory("BoostCounter"); count < 3; count++){
+    int buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+	   int x = GetActorX(0);
+	   int y = GetActorY(0);
+    if (buttons != BT_FORWARD || ((x / 10000000) == (lastx / 10000000) && (y / 10000000) == (lasty / 10000000))) {
+	     TakeInventory("BoostCounter", 3); 
+	     terminate;
+	   }
+	   GiveInventory("BoostCounter", 1);
+	   lastx = x;
+	   lasty = y;
+    Delay(20);
+  }
+  TakeInventory("BoostCounter", 3);
+  ACS_NamedExecute("StartBoost", 0);
+}
+
+// Begins actually speed boosting
+script "StartBoost" (void)
+{
+  SetActorProperty(0, APROP_Speed, 3.0);
+  GiveInventory("BoostMarker", 1);
+  PlaySound(0, "BOOSTER", 5, 0.7, True, 0);
+  int x = 0;
+  int y = 0;
+  int lastx = 100000000;
+  int lasty = 100000000;
+  while (True) {
+    int buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+	   x = GetActorX(0);
+    y = GetActorY(0);
+    SpawnProjectile(0, "BoostBoom", GetActorAngle(0), 70, 0, 0, 0);
+	   if (buttons != BT_FORWARD || ((x / 1000000) == (lastx / 1000000) && (y / 1000000) == (lasty / 1000000))) {
+	     break;
+	   }
+	   lastx = x;
+	   lasty = y;
+	   Delay(5);
+  }
+  StopSound(0, 5);
+  TakeInventory("BoostMarker", 1);
+  if (GetPlayerInput(-1, INPUT_BUTTONS) & BT_CROUCH) {
+    GiveInventory("ShineMarker", 1);
+	   ACS_NamedExecute("ShineSpark", 0);
+  }
+  SetActorProperty(0, APROP_Speed, 1.0);
+}
+
+// Performs the shinespark
+script "Shinespark" (void) {
+  int buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+  for(int i = 0; i < 90; i++) {
+    int playerZ = (GetActorZ(0) - GetActorFloorZ(0)) >> 16;
+	   if (GetPlayerInput(-1, INPUT_BUTTONS) & BT_JUMP && GetPlayerInput(-1, INPUT_BUTTONS) & BT_FORWARD && playerZ < 256) {
+	     PlaySound(0, "SHINESPK", 5, 0.8, False, 0);
+      SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);
+      for(int j = 0; j <= 30; j++) {
+        ThrustThing(GetActorAngle(0) >> 8, 35, 1, 0);
+        SpawnProjectile(0, "BoostBoom", GetActorAngle(0), 70, 0, 0, 0);
+        delay(1);
+      }
+      SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+	     ACS_NamedExecute("StartBoost", 0);
+    }
+	   else if (GetPlayerInput(-1, INPUT_BUTTONS) == BT_JUMP && playerZ < 256) {
+	     PlaySound(0, "SHINESPK", 5, 0.8, False, 0);
+	     SetPlayerProperty(0, 1, PROP_TOTALLYFROZEN);
+      for(int k = 0; k <= 30; k++) {
+        ThrustThingZ(0, 20, 0, 1);
+        SpawnProjectile(0, "BoostBoom", GetActorAngle(0), 0, 200, 0, 0);
+        delay(1);
+      }
+      SetPlayerProperty(0, 0, PROP_TOTALLYFROZEN);
+	     ACS_NamedExecute("StartBoost", 0);
+
+	   }
+	   Delay(1);
+  }
+  TakeInventory("ShineMarker", 1);
+  //ACS_NamedExecute("StartBoost", 0);
+}
+
+// Turns the X-Ray Scanner on and off
+script "XrayScanner" (void) {
+  if(CheckInventory("XrayScanner")) {
+    PlaySound(0, "DSOOF");
+    if(CheckInventory("ScanMarker"))
+      TakeInventory("ScanMarker", 1);
+    else
+      GiveInventory("ScanMarker", 1);
+  }
+  if(CheckInventory("ScanMarker")) {
+		  SpawnSpotFacing("ScanBomb", 2551, 2556);
+    SpawnSpotFacing("ScanMissile", 2552, 2556);
+    SpawnSpotFacing("ScanSuperMissile", 2553, 2556);
+    SpawnSpotFacing("ScanSpeedBooster", 2554, 2556);
+    SpawnSpotFacing("ScanScrewAttack", 2555, 2556);
+  } else
+    Thing_Remove(2556);
+}

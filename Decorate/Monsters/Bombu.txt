@@ -1,0 +1,72 @@
+ACTOR Bombu : MonsterBase
+{
+  +JUMPDOWN
+  +SPAWNFLOAT
+  +FLOAT
+  +FLOATBOB
+  +NOGRAVITY
+  +FORCEXYBILLBOARD
+  Health 20
+  Height 16
+  Radius 12
+  Speed 4
+  MeleeRange 96
+  Obituary "%o was caught in a Bombu blast."
+  DamageFactor "Beam", 0.0
+  DamageFactor "Electric", 0.0
+  DamageFactor "ChargeElectric", 0.0
+  DamageType "NoMonsterDamage"
+  States
+  {
+  Spawn:
+    BMBU A 5 A_Look
+    Loop
+  See:
+    BMBU ABCDEF 5 A_Chase
+    BMBU ABCDEF 2 A_Chase
+    BMBU ABCDEF 2 A_Chase
+    BMBU AAAAAAAAAA 0 A_SpawnItemEx("WaveParticle", random(-10.0, 10.0), random(-10.0, 10.0), random(-10.0, 20.0), 0, 0, 0, 0, 0, 5)
+    BMBU A 0 A_PlaySound("BEAMHIT")
+    BMBU A 0 A_CustomMeleeAttack((30))
+    BMBU ABCDEF 2 A_Chase
+    BMBU ABCDEF 5 A_Chase
+    BMBU ABCDEF 2 A_Chase
+    BMBU ABCDEF 2 A_Chase
+    BMBU AAAAAAAAAA 0 A_SpawnItemEx("WaveParticle", random(-10.0, 10.0), random(-10.0, 10.0), random(-10.0, 20.0), 0, 0, 0, 0, 0, 5)
+    BMBU A 0 A_PlaySound("BEAMHIT")
+    BMBU A 0 A_CustomMeleeAttack((30))
+    BMBU ABCDEF 2 A_Chase
+    loop
+  Pain:
+    BMBU A 1 Thing_SetTranslation(0, 7)
+    BMBU A 1 Thing_SetTranslation(0, 0)
+    Goto See
+  Death:
+    BMBU ABCDEF 1 A_Scream
+    BMBU A 0 A_NoBlocking
+    BMBU A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    BMBU A 0 A_SpawnDebris("Chunk")
+    Stop
+  Ice:
+    TNT1 A 0 A_SpawnItemEx("BombuIce", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    TNT1 A 0 A_PlaySound("misc/freeze")
+    Stop
+  }
+}
+
+ACTOR BombuIce : IceBase
+{
+  Height 16
+  Radius 12
+  States
+  {
+  Spawn:
+    BMBU A 500
+    BMBU A 1 A_Jump(256, "Death")
+    Loop
+  Death:
+    BMBU A 0 A_SpawnItemEx("PickupSpawnerMissiles", 0, 0, 0, 0, 0, 0, 0, 0, 0, tid)
+    BMBU A 0 A_FreezeDeathChunks
+    Stop
+  }
+}
